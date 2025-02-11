@@ -18,7 +18,7 @@ local function update(index)
     local reach_length = 1
     local look_offset = vector.new(
         reach_length * sin(look_vert) * sin(look_horiz),
-        reach_length * (cos(look_vert - math.pi / 2)),
+        reach_length * cos(look_vert),
         reach_length * sin(look_vert) * cos(look_horiz)
     )
     local look_reach_pos = vector.add(eye_pos, look_offset)

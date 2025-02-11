@@ -3,12 +3,42 @@
 -- shows some info about wielded item. Updating
 -- frequently so you can E.g. watch your dig count
 -- of tool or level continuesly.
+local C = minetest.colorize
+local F = minetest.formspec_escape
+local SER = minetest.serialize
+
 local function update(index)
+	local output = ""
 
 	local oWI = tmi.player:get_wielded_item()
 	local oMeta = oWI:get_meta()
 	local sItemstring = oWI:get_name()
 	if '' == sItemstring then return 'Empty Hand\n' end
+
+	if oMeta then
+		local meta_table = oMeta:to_table()
+		if meta_table then
+			local meta_inv, inv_indices
+			local meta_inv_serialized = "" -- prevent any edge cases and extra checks
+			local meta_fields = meta_table.fields
+			if meta_fields then
+				meta_inv = meta_fields.inv
+				meta_inv_serialized = SER(meta_inv)
+				meta_table.fields.inv = nil
+				inv_indices = string.match(meta_inv_serialized, "return ({.*})")
+				if inv_indices == "{_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1]}" then
+					inv_indices = "[All 27 inv items same]"
+					meta_inv = { meta_inv[2] }
+				end
+			end
+			output = C("#eff", "\nWielded Item Meta: " .. dump(meta_table) .. "\n")
+			if meta_inv then
+				output = C("#eff",
+					"\nWielded Item Inv: " ..
+					dump(meta_inv) .. "\n" .. inv_indices .. "\n")
+			end
+		end
+	end
 
 	local iCount = oWI:get_count()
 	local sDescription = oWI:get_description()
@@ -17,7 +47,7 @@ local function update(index)
 	-- invert wear amount
 	local iRemaining = iMax - iWear
 	local fRemainingPercent = .01 * math.floor(
-			10000 * iRemaining / iMax)
+		10000 * iRemaining / iMax)
 	local sWear
 	if 0 == iWear then
 		sWear = 'None'
@@ -32,19 +62,19 @@ local function update(index)
 	else
 		-- yes, it should be "Remaining wear" but that's
 		-- just too long on smaller screens
-		sAux = 'Wear: ' .. sWear
-				.. '  ' .. fRemainingPercent .. '%'
+		sAux = 'Durability: ' .. sWear
+			.. '  ' .. fRemainingPercent .. '%'
 	end
 
 	---------------------------------------------------------------
 	-- here you can comment out lines you don't want or add more --
 	-- depending on what you are interested in seeing in HUD     --
 	---------------------------------------------------------------
-	return (sDescription or sItemstring)
-			.. '\n' .. iCount .. ' ' .. sItemstring
-			.. '\n' .. sAux
-			.. '\n'
-
+	return output
+		.. '\n' .. (sDescription or sItemstring)
+		.. '\n' .. iCount .. ' ' .. sItemstring
+		.. '\n' .. sAux
+		.. '\n'
 end -- update
 
 
@@ -56,4 +86,3 @@ tmi.addModule({
 })
 
 --print('module wieldedItem loaded')
-

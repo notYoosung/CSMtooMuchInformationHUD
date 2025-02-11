@@ -1,3 +1,7 @@
+local C = minetest.colorize
+local F = minetest.formspec_escape
+local SER = minetest.serialize
+
 --[[ tModule is something like this
 tModule = {
 	id = 'moduleID', -- Unique module identifier. (String) {IDs beginning with '__' are reserved}
@@ -20,7 +24,6 @@ tModule = {
 -- your module script needs to call this at load to register in the order
 -- you want the info snippets to show up in
 function tmi.addModule(tModule)
-
 	-- no id, no registration
 	if not tModule.id then return false end
 	-- already got a module with that id
@@ -31,12 +34,9 @@ function tmi.addModule(tModule)
 	tmi.moduleLookup[tModule.id] = tModule.index
 
 	return tModule.index
-
 end -- addModule
 
-
 function tmi.formInput(formname, fields)
-
 	if tmi.formname ~= formname then return false end
 
 	local index, m
@@ -61,40 +61,62 @@ function tmi.formInput(formname, fields)
 	end -- loop all fields. With our formspec there should only be one
 
 	return true
-
 end -- formInput
 
-
 function tmi.formShow()
-
 	local iMax = #tmi.modules
 	if 0 == iMax then return end
 
 	local iX = .5
 	local iY = .25
-	local sOut = 'size[5,' .. tostring(iMax * .5 + 1.5) .. ']'
-		.. 'checkbox[' .. tostring(iX) .. ',' .. tostring(iY) .. ';'
-		.. '0;Main;' .. tostring(tmi.isOn('__tmi__')) .. ']'
+	local sOut = 'size[10,' .. F(tostring(iMax * .5 + 1.5)) .. ']'
+		.. 'checkbox[' .. F(tostring(iX)) .. ',' .. F(tostring(iY)) .. ';'
+		.. '0;Main;' .. F(tostring(tmi.isOn('__tmi__'))) .. ']'
+
+	do
+		-- textarea[<X>,<Y>;<W>,<H>;<name>;<label>;<default>]
+		local bMain = tmi.isOn('__tmi__')
+
+		if bMain and not tmi.hudID then return tmi.init() end
+
+		local textbox_sOut = ''
+		local textbox_iMax = #tmi.modules
+		if 0 == textbox_iMax then return end
+
+		local b, m, s
+		for index = 1, textbox_iMax do
+			s = ''
+			m = tmi.modules[index]
+			b = tmi.isOn(m.id)
+			if b or m.updateWhenHidden then
+				if 'function' == type(m.onUpdate) then
+					s = m.onUpdate(index)
+				else
+					s = m.value or ''
+				end
+			end
+			if b and '' ~= s then textbox_sOut = textbox_sOut .. s .. '\n' end
+		end -- loop modules
+
+		sOut = sOut .. "textarea[5,0;5," .. F(tostring(iMax * .5 + 1.5)) .. ";textbox_tmi_gui;;" .. F(textbox_sOut) .. "]"
+	end
 
 
-	local index, m
+	local m
 	for index = 1, iMax do
 		iY = iY + .5
 		m = tmi.modules[index]
 		if 'function' == type(m.onClear) then
 			-- add clear button
-			sOut = sOut .. 'button[0,' .. tostring(iY) .. ';.5,1;'
-				.. 'b_' .. tostring(index) .. ';X]'
+			sOut = sOut .. 'button[0,' .. F(tostring(iY)) .. ';.5,1;'
+				.. 'b_' .. F(tostring(index)) .. ';X]'
 		end
-		sOut = sOut .. 'checkbox[' .. tostring(iX) .. ',' .. tostring(iY) .. ';'
-		.. tostring(index) .. ';' .. m.title .. ';' .. tostring(tmi.isOn(m.id)) .. ']'
-
+		sOut = sOut .. 'checkbox[' .. F(tostring(iX)) .. ',' .. F(tostring(iY)) .. ';'
+			.. F(tostring(index)) .. ';' .. F(m.title) .. ';' .. F(tostring(tmi.isOn(m.id))) .. ']'
 	end -- loop modules
 
 	core.show_formspec(tmi.formname, sOut)
-
 end -- formShow
-
 
 function tmi.getVersion()
 	local tV = core.get_version()
@@ -103,9 +125,7 @@ function tmi.getVersion()
 	return tV
 end
 
-
 function tmi.init()
-
 	-- don't do anything else if there is already a hud id stored
 	if tmi.hudID then return end
 
@@ -115,21 +135,21 @@ function tmi.init()
 		local tV = tmi.getVersion()
 		local tHud = {
 			[(5 <= tV.major and 9 <= tV.minor)
-				and 'type' or 'hud_elem_type'] = 'text',
+			and 'type' or 'hud_elem_type'] = 'text',
 			name = 'tmiHUD',
 			number = tmi.conf.colour,
-			position = { x = 0.002, y = 0.77 },
+			position = { x = 1 - 0.01, y = 0.95 },
 			offset = { x = 8, y = -8 },
 			text = 'Too Much Info HUD',
 			scale = { x = 200, y = 60 },
-			alignment = { x = 1, y = -1 },
+			alignment = { x = -1, y = -1 },
 		}
 		tmi.hudID = tmi.player:hud_add(tHud)
 	end
 
 	local iMax = #tmi.modules
 	if 0 == iMax then return end
-	local index, m
+	local m
 	for index = 1, iMax do
 		m = tmi.modules[index]
 		if (not m.bInitDone) and ('function' == type(m.onInit)) then
@@ -143,17 +163,13 @@ function tmi.init()
 	end -- loop modules
 
 	print('[TMI modules initialized]')
-
 end -- init
-
 
 -- query CSM-datastore for toggle setting of module
 function tmi.isOn(id) return '' == tmi.store:get_string(id .. '_disabled') end -- isOn
 
-
 -- clumsy name for a clumsy way of inserting grouping characters
 function tmi.niceNaturalString(iN)
-
 	local sOut = tostring(iN)
 	if 3 < #sOut then
 		sOut = sOut:sub(1, -4) .. "'" .. sOut:sub(-3, -1)
@@ -166,24 +182,18 @@ function tmi.niceNaturalString(iN)
 	end
 
 	return sOut
-
 end -- niceNaturalString
 
-
 function tmi.removeHUD()
-
 	-- no hud yet?
 	if not tmi.hudID then return end
 
 	tmi.player:hud_remove(tmi.hudID)
 	tmi.hudID = nil
-
 end -- removeHUD
-
 
 -- called when logging off
 function tmi.shutdown()
-
 	local iMax = #tmi.modules
 	if 0 == iMax then return end
 	local index, m
@@ -193,12 +203,9 @@ function tmi.shutdown()
 	end -- loop modules
 
 	print('[TMI shutdown]')
-
 end -- shutdown
 
-
 function tmi.startupLoop()
-
 	tmi.player = core.localplayer
 
 	if tmi.player then
@@ -207,22 +214,19 @@ function tmi.startupLoop()
 	else
 		core.after(1, tmi.startupLoop)
 	end
-
 end -- startupLoop
-
 
 -- to toggle visibility of a module by index
 function tmi.toggleModule(index)
-
 	local id, m
 	-- main switch is inexistant index 0
 	local bIsMain = 0 == index
 	if bIsMain then
 		id = '__tmi__'
-	-- kinda check if index could be out of range
-	--elseif #tmi.modules < index then
-	--	return
-	-- better check that also checks if an id is actually set
+		-- kinda check if index could be out of range
+		--elseif #tmi.modules < index then
+		--	return
+		-- better check that also checks if an id is actually set
 	elseif tmi.modules[index] and tmi.modules[index].id then
 		m = tmi.modules[index]
 		id = m.id
@@ -276,15 +280,11 @@ function tmi.toggleModule(index)
 	if not bIsTurningOn then
 		tmi.removeHUD()
 	end
-
 end -- toggleModule
-
 
 function tmi.twoDigitNumberString(iN) return string.format('%02i', iN) end -- twoDigitNumberString
 
-
 function tmi.update()
-
 	local bMain = tmi.isOn('__tmi__')
 
 	core.after(tmi.conf.interval, tmi.update)
@@ -297,7 +297,7 @@ function tmi.update()
 	local iMax = #tmi.modules
 	if 0 == iMax then return end
 
-	local b, index, m, s
+	local b, m, s
 	for index = 1, iMax do
 		s = ''
 		m = tmi.modules[index]
@@ -316,9 +316,6 @@ function tmi.update()
 	if not tmi.hudID then return end
 
 	tmi.player:hud_change(tmi.hudID, 'text', sOut)
-
 end -- update
 
-
 --print('loaded functions.lua')
-

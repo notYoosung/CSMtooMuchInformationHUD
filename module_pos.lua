@@ -20,7 +20,7 @@ end -- getPositionTablesForPos
 
 local function update(index)
 
-	local hudPosSeparator = ' | '
+	local hudPosSeparator = ', '
 	local tNode, tBlock = getPositionTablesForPos(tmi.player:get_pos())
 	local sNode = 'Node: '
 		.. tostring(tNode.x) .. hudPosSeparator

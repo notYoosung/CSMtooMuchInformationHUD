@@ -1,3 +1,7 @@
+local C = minetest.colorize
+local F = minetest.formspec_escape
+local SER = minetest.serialize
+
 -- Minetest Client-Side-Mod by SwissalpS
 -- Modular rearangeable manager for a single
 -- text based HUD element.
@@ -11,7 +15,7 @@ tmi = {
 -- some values for users to configure
 tmi.conf = {
 	-- seconds between updates
-	interval = 0.5,
+	interval = 1,
 	-- how many characters to show per vector
 	precision = 4,
 	-- rrggbb colour of text
@@ -44,6 +48,8 @@ local p = tmi.pathMod .. 'module_'
 -----------------------------------------------------
 --dofile(p .. 'debugChannel.lua') -- have not yet been able to use this
 --
+dofile(p .. 'pointed.lua') -- pointed node meta, etc.
+
 dofile(p .. 'serverInfo.lua') -- server ip, protocol version etc.
 --
 dofile(p .. 'wieldedItem.lua') -- description, wear and other info about wielded item

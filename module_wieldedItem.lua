@@ -18,24 +18,25 @@ local function update(index)
 	if oMeta then
 		local meta_table = oMeta:to_table()
 		if meta_table then
-			local meta_inv, inv_indices
+			local meta_inv_serialized, inv_indices
 			local meta_inv_serialized = "" -- prevent any edge cases and extra checks
 			local meta_fields = meta_table.fields
 			if meta_fields then
-				meta_inv = meta_fields.inv
-				meta_inv_serialized = SER(meta_inv)
-				meta_table.fields.inv = nil
-				inv_indices = string.match(meta_inv_serialized, "return ({[_\"].*})")
-				if inv_indices == "{_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1]}" then
-					inv_indices = "[All 27 inv items same]"
-					meta_inv = SER({ meta_inv[2] })
+				meta_inv_serialized = meta_fields.inv
+				if meta_inv_serialized then
+					meta_table.fields.inv = nil
+					inv_indices = string.match(meta_inv_serialized, "return ({[_\"].*})")
+					if inv_indices == "{_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1]}" then
+						inv_indices = "[All 27 inv items same]"
+						meta_inv_serialized = SER({ minetest.deserialize(meta_inv_serialized)[1] })
+					end
 				end
 			end
 			output = C("#eff", "\nWielded Item Meta: " .. dump(meta_table) .. "\n")
-			if meta_inv then
+			if meta_inv_serialized then
 				output = C("#eff",
 					"\nWielded Item Inv: " ..
-					dump(minetest.deserialize(meta_inv)) .. "\n" .. tostring(inv_indices) .. "\n")
+					dump(minetest.deserialize(meta_inv_serialized)) .. "\n" .. tostring(inv_indices) .. "\n")
 			end
 		end
 	end

@@ -7,6 +7,7 @@ local C = minetest.colorize
 local F = minetest.formspec_escape
 local SER = minetest.serialize
 
+
 local function update(index)
 	local output = ""
 
@@ -18,12 +19,13 @@ local function update(index)
 	if oMeta then
 		local meta_table = oMeta:to_table()
 		if meta_table then
-			local meta_inv_serialized, inv_indices
+			local inv_indices
 			local meta_inv_serialized = "" -- prevent any edge cases and extra checks
 			local meta_fields = meta_table.fields
 			if meta_fields then
 				meta_inv_serialized = meta_fields.inv
 				if meta_inv_serialized then
+					meta_table.fields.tool_capabilities = nil
 					meta_table.fields.inv = nil
 					inv_indices = string.match(meta_inv_serialized, "return ({[_\"].*})")
 					if inv_indices == "{_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1]}" then
@@ -32,11 +34,11 @@ local function update(index)
 					end
 				end
 			end
-			output = C("#eff", "\nWielded Item Meta: " .. dump(meta_table) .. "\n")
+			output = C("#eff", "\nWielded Item Meta: " .. tostring(tmi.dump_sorted(meta_table)):gsub("\\?27%([cT].-%)", ""):gsub("\\?27[FE]", "") .. "\n")
 			if meta_inv_serialized then
 				output = C("#eff",
 					"\nWielded Item Inv: " ..
-					dump(minetest.deserialize(meta_inv_serialized)) .. "\n" .. tostring(inv_indices) .. "\n")
+					tmi.dump_sorted(minetest.deserialize(meta_inv_serialized)) .. "\n" .. tostring(inv_indices) .. "\n")
 			end
 		end
 	end

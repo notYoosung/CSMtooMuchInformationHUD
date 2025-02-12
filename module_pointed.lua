@@ -9,26 +9,36 @@ local SER = minetest.serialize
 
 local sin = math.sin
 local cos = math.cos
+--[[
+minetest.camera:
+2025-02-11 17:15:43: [Main]: userdata metatable: {
+	set_camera_mode = <function>,
+	get_camera_mode = <function>,
+	get_fov = <function>,
+	get_offset = <function>,
+	get_look_dir = <function>,
+	get_look_vertical = <function>,
+	get_look_horizontal = <function>,
+	get_aspect_ratio = <function>,
+	get_pos = <function>
+}
+]]
+local camera = tmi.camera
 local function update(index)
+    if not camera then
+        camera = tmi.camera
+    end
     local output = ""
 
-    local eye_pos = vector.offset(tmi.player:get_pos(), 0, 1.625, 0)
-    local look_horiz = tmi.player:get_last_look_horizontal()
-    local look_vert = tmi.player:get_last_look_vertical()
-    local reach_length = 1
-    local look_offset = vector.new(
-        reach_length * sin(look_vert) * sin(look_horiz),
-        reach_length * cos(look_vert),
-        reach_length * sin(look_vert) * cos(look_horiz)
-    )
+    local eye_pos = camera:get_pos()
+    local reach_length = 8
+    local look_offset = vector.multiply(camera:get_look_dir(), reach_length)
     local look_reach_pos = vector.add(eye_pos, look_offset)
-    output = output .. "look_offset: " .. tostring(look_offset) .. "\n"
-    output = output .. "look_reach_pos: " .. tostring(look_reach_pos) .. "\n"
     minetest.add_particle({
         pos = look_reach_pos,
         velocity = vector.new(0, 0, 0),
         acceleration = vector.new(0, 0, 0),
-        expirationtime = 0.5,
+        expirationtime = tmi.conf.interval,
         size = 5,
         texture = "mobs_mc_glow_squid_glint1.png",
         glow = minetest.LIGHT_MAX,
@@ -45,6 +55,7 @@ local function update(index)
                 if node_meta then
                     local meta_table = node_meta:to_table()
                     if meta_table then
+                        meta_table.tool_capabilities = nil
                         local meta_inv = meta_table.inv
                         if meta_inv then
                             local meta_inv_serialized = SER(meta_inv)
@@ -54,15 +65,15 @@ local function update(index)
                                 inv_indices = "[All 27 inv items same]"
                                 meta_inv = { meta_inv[1] }
                             end
-                            output = minetest.colorize("#eff", "\nPointed Node Meta: " .. dump(meta_table) .. "\n")
-                            output = minetest.colorize("#eff",
-                                "\nPointed Node Inv: " .. dump(minetest.deserialize(meta_inv)) .. "\n" .. inv_indices .. "\n")
+                            output = output .. minetest.colorize("#eff", "\nPointed Node Meta: " .. tmi.dump_sorted(meta_table) .. "\n")
+                            output = output .. minetest.colorize("#eff",
+                                "\nPointed Node Inv: " .. minetest.deserialize(meta_inv) .. "\n" .. inv_indices .. "\n")
                         end
                     end
                 end
             elseif type == "object" then
                 local id = pointed_thing.id
-                output = minetest.colorize("#eff", "\nPointed Entity Meta: " .. tostring(id) .. "\n")
+                output = output .. minetest.colorize("#eff", "\nPointed Entity Meta: " .. tostring(id) .. "\n")
             end
         end
     end

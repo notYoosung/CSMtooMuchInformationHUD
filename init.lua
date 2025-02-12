@@ -15,7 +15,7 @@ tmi = {
 -- some values for users to configure
 tmi.conf = {
 	-- seconds between updates
-	interval = 1,
+	interval = 0.5,
 	-- how many characters to show per vector
 	precision = 4,
 	-- rrggbb colour of text

@@ -18,14 +18,17 @@ local function update(index)
 
 	if oMeta then
 		local meta_table = oMeta:to_table()
-		if meta_table then
+		if meta_table and meta_table ~= {} then
 			local inv_indices
 			local meta_inv_serialized = "" -- prevent any edge cases and extra checks
 			local meta_fields = meta_table.fields
-			if meta_fields then
+			if meta_fields and meta_fields ~= {} then
 				meta_inv_serialized = meta_fields.inv
+				if meta_fields.tool_capabilities then
+					meta_table.fields.tool_capabilities = tmi.dump_sorted(minetest.deserialize("return " .. meta_fields.tool_capabilities))
+				end
+				meta_table.fields.description = nil
 				if meta_inv_serialized then
-					meta_table.fields.tool_capabilities = nil
 					meta_table.fields.inv = nil
 					inv_indices = string.match(meta_inv_serialized, "return ({[_\"].*})")
 					if inv_indices == "{_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1]}" then

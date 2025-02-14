@@ -253,8 +253,7 @@ function tmi.init()
 	if bMain then
 		local tV = tmi.getVersion()
 		local tHud = {
-			[(5 <= tV.major and 9 <= tV.minor)
-			and 'type' or 'hud_elem_type'] = 'text',
+			type = 'text',
 			name = 'tmiHUD',
 			number = tmi.conf.colour,
 			position = { x = 1 - 0.01, y = 0.95 },

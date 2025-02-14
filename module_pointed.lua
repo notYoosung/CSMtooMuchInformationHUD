@@ -24,6 +24,7 @@ minetest.camera:
 }
 ]]
 local camera = tmi.camera
+local reach_length = 16
 local function update(index)
     if not camera then
         camera = tmi.camera
@@ -31,10 +32,9 @@ local function update(index)
     local output = ""
 
     local eye_pos = camera:get_pos()
-    local reach_length = 8
     local look_offset = vector.multiply(camera:get_look_dir(), reach_length)
     local look_reach_pos = vector.add(eye_pos, look_offset)
-    minetest.add_particle({
+    --[[minetest.add_particle({
         pos = look_reach_pos,
         velocity = vector.new(0, 0, 0),
         acceleration = vector.new(0, 0, 0),
@@ -42,7 +42,7 @@ local function update(index)
         size = 5,
         texture = "mobs_mc_glow_squid_glint1.png",
         glow = minetest.LIGHT_MAX,
-    })
+    })]]
     local ray = minetest.raycast(eye_pos, look_reach_pos, true, false)
     -- local playerent = ray:next()
     if ray then
@@ -54,26 +54,30 @@ local function update(index)
                 local node_meta = minetest.get_meta(node_pos)
                 if node_meta then
                     local meta_table = node_meta:to_table()
-                    if meta_table then
-                        meta_table.tool_capabilities = nil
-                        local meta_inv = meta_table.inv
+                    -- output = output .. "Pointed Node Meta: " .. dump(meta_table)
+                    if meta_table and meta_table ~= {} then
+                        if meta_table.fields and meta_table.fields == {} then
+                            meta_table.fields = nil
+                        end
+                        local meta_inv = meta_table.inventory
                         if meta_inv then
-                            local meta_inv_serialized = SER(meta_inv)
+                            local meta_inv_serialized = tostring(meta_inv)
                             meta_table.inv = nil
-                            local inv_indices = string.match(meta_inv_serialized, "return ({.*})")
+                            meta_table.formspec = nil
+                            local inv_indices = string.match(meta_inv_serialized, "return ({.*})") or ""
                             if inv_indices == "{_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1]}" then
                                 inv_indices = "[All 27 inv items same]"
                                 meta_inv = { meta_inv[1] }
                             end
                             output = output .. minetest.colorize("#eff", "\nPointed Node Meta: " .. tmi.dump_sorted(meta_table) .. "\n")
                             output = output .. minetest.colorize("#eff",
-                                "\nPointed Node Inv: " .. minetest.deserialize(meta_inv) .. "\n" .. inv_indices .. "\n")
+                                "\nPointed Node Inv: " .. dump((meta_inv_serialized)) .. "\n" .. tostring(inv_indices) .. "\n")
                         end
                     end
                 end
             elseif type == "object" then
                 local id = pointed_thing.id
-                output = output .. minetest.colorize("#eff", "\nPointed Entity Meta: " .. tostring(id) .. "\n")
+                output = output .. minetest.colorize("#eff", "\nPointed Entity Meta: " .. dump(id) .. "\n")
             end
         end
     end

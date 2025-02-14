@@ -49,7 +49,9 @@ local p = tmi.pathMod .. 'module_'
 --dofile(p .. 'debugChannel.lua') -- have not yet been able to use this
 --
 dofile(p .. 'pointed.lua') -- pointed node meta, etc.
-
+--
+dofile(p .. 'players.lua') -- online playerlist
+--
 dofile(p .. 'serverInfo.lua') -- server ip, protocol version etc.
 --
 dofile(p .. 'wieldedItem.lua') -- description, wear and other info about wielded item

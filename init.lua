@@ -100,7 +100,7 @@ print('[TMI Loaded]')
 minetest.register_on_receiving_chat_message(function(message)
 	local time = ""
 	if os and os.date then
-		time = os.date("%H:%M:%S")
+		time = tostring(os.date("%H:%M:%S"))
 	end
 	minetest.display_chat_message("[" .. time .. "] " .. message)
 	return true

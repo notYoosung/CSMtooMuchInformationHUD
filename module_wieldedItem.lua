@@ -8,6 +8,10 @@ local F = minetest.formspec_escape
 local SER = minetest.serialize
 local DES = minetest.deserialize
 
+local empty_table_dump = dump({})
+local empty_table_ser = SER({})
+local empty_fields_table_dump = dump({ fields = {} })
+local empty_fields_table_ser = SER({ fields = {} })
 
 local function update(index)
 	local output = ""
@@ -38,11 +42,13 @@ local function update(index)
 					end
 				end
 			end
-			output = C("#eff", "\nWielded Item Meta: " .. tmi.strip_esc(tmi.dump_sorted(meta_table)) .. "\n")
-			if meta_inv_serialized then
+			if SER(meta_table) ~= empty_fields_table_ser then
+				output = C("#eff", "\nWielded Item Meta: " .. tmi.strip_esc(tmi.dump_sorted(meta_table)) .. "\n")
+			end
+			if meta_inv_serialized and meta_inv_serialized ~= "" then
 				output = C("#eff",
-					"\nWielded Item Inv: " ..
-					tmi.dump_sorted(DES(meta_inv_serialized)) .. "\n" .. tostring(inv_indices) .. "\n")
+					"\nWielded Item Inv: {\n" ..
+					tmi.dump_meta_inv(DES(meta_inv_serialized)) .. "}\n" .. tostring(inv_indices) .. "\n")
 			end
 		end
 	end

@@ -445,8 +445,10 @@ end -- update
 
 
 
+local full_inv_pattern = "%{_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1]%}"--"%{" .. string.rep("_[1],", 26) .. "_[1]%}"
 function tmi.strip_esc(str)
-	return tostring(str):gsub("\\?27%([cT].-%)", ""):gsub("\\?27[FE]", "")
+	return tostring(str):gsub("\\?27%([cT].-%)", ""):gsub("\\?27[FE]", ""):gsub(full_inv_pattern, "{_[1] x27}")
+	
 end
 
 local empty_table_dump = dump({})
@@ -465,7 +467,7 @@ function tmi.dump_meta_inv(meta_inv_table)
 				if itemstack_meta then
 					local itemstack_meta_table = itemstack_meta:to_table()
 					if itemstack_meta_table then
-						local ser = tmi.strip_esc(SER(itemstack_meta_table))
+						local ser = (SER(itemstack_meta_table))
 						if ser ~= empty_fields_table_ser then
 							itemstack_str = itemstack_str .. " - " .. ser
 						end
@@ -495,7 +497,7 @@ function tmi.dump_meta_inv(meta_inv_table)
 				-- meta_inv = { meta_inv[1] }
 			end--]]
 		-- output = output .. C("#eff", "\nPointed Node Inv: " .. dump((meta_inv)) .. "\n" .. tostring(inv_indices) .. "\n")
-		return meta_inv_output
+		return tmi.strip_esc(meta_inv_output)
 	else
 		return ""
 	end

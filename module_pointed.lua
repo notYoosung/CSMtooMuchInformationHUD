@@ -69,7 +69,7 @@ local function update(index)
                         if meta_fields then
                             meta_table.fields.formspec = nil
                             if meta_fields.description then
-                                meta_table.fields.description = tmi.strip_esc(meta_fields.description)
+                                meta_table.fields.description = meta_fields.description
                             end
                         end
                         local meta_inv = meta_table.inventory
@@ -84,7 +84,7 @@ local function update(index)
                             end
                         end
 
-                        output = output .. C("#eff", "\nPointed Node Meta: " .. tmi.strip_esc(tmi.dump_sorted(meta_table)) .. "\n")
+                        output = output .. C("#eff", "\nPointed Node Meta: " .. tmi.dump_sorted(meta_table) .. "\n")
                         if meta_inv then
                             for meta_inv_key, meta_inv_table in pairs(meta_inv) do
                                 local dump_meta_inv = tmi.dump_meta_inv(meta_inv_table)
@@ -106,7 +106,7 @@ local function update(index)
         end
     end
 
-    return output
+    return tmi.strip_esc(output)
 end -- update
 
 

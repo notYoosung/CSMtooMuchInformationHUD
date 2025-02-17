@@ -38,11 +38,11 @@ local function update(index)
 					end
 				end
 			end
-			output = C("#eff", "\nWielded Item Meta: " .. tostring(tmi.dump_sorted(meta_table)):gsub("\\?27%([cT].-%)", ""):gsub("\\?27[FE]", "") .. "\n")
+			output = C("#eff", "\nWielded Item Meta: " .. tmi.strip_esc(tmi.dump_sorted(meta_table)) .. "\n")
 			if meta_inv_serialized then
 				output = C("#eff",
 					"\nWielded Item Inv: " ..
-					((meta_inv_serialized)) .. "\n" .. tostring(inv_indices) .. "\n")
+					tmi.dump_sorted(DES(meta_inv_serialized)) .. "\n" .. tostring(inv_indices) .. "\n")
 			end
 		end
 	end

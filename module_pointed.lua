@@ -26,8 +26,13 @@ minetest.camera:
 ]]
 local camera = tmi.camera
 local reach_length = 16
-local empty_table_dump = dump({ })
+local empty_table_dump = dump({})
+local empty_table_ser = SER({})
 local empty_fields_table_dump = dump({ fields = {} })
+local empty_fields_table_ser = SER({ fields = {} })
+
+
+
 local function update(index)
     if not camera then
         camera = tmi.camera
@@ -64,7 +69,7 @@ local function update(index)
                         if meta_fields then
                             meta_table.fields.formspec = nil
                             if meta_fields.description then
-                                meta_table.fields.description = tostring(meta_fields.description):gsub("\\?27%([cT].-%)", ""):gsub("\\?27[FE]", "")
+                                meta_table.fields.description = tmi.strip_esc(meta_fields.description)
                             end
                         end
                         local meta_inv = meta_table.inventory
@@ -79,38 +84,20 @@ local function update(index)
                             end
                         end
 
-                        output = output .. C("#eff", "\nPointed Node Meta: " .. tmi.dump_sorted(meta_table) .. "\n")
+                        output = output .. C("#eff", "\nPointed Node Meta: " .. tmi.strip_esc(tmi.dump_sorted(meta_table)) .. "\n")
                         if meta_inv then
                             for meta_inv_key, meta_inv_table in pairs(meta_inv) do
-                                local meta_inv_table_counts = {}
-                                for meta_inv_table_index, meta_inv_table_itemstack in pairs(meta_inv_table) do
-                                    local itemstack_str = tostring(meta_inv_table_itemstack)
-                                    local previous_count_data = meta_inv_table_counts[#meta_inv_table_counts]
-                                    if previous_count_data and previous_count_data.itemstack_str == itemstack_str then
-                                        meta_inv_table_counts[#meta_inv_table_counts].count = (previous_count_data.count or 0) + 1
-                                    else
-                                        meta_inv_table_counts[#meta_inv_table_counts + 1] = {
-                                            itemstack_str = itemstack_str,
-                                            count = 1,
-                                        }
-                                    end
-                                end
-                                local meta_inv_output = ""
-                                for indx, count_data in ipairs(meta_inv_table_counts) do
-                                    meta_inv_output = meta_inv_output .. tostring(count_data.itemstack_str):gsub("ItemStack%((.*)%)", "%1") .. " x" .. (count_data.count or 0) .. ",    \n"
-                                end
-                                --[[local meta_inv_serialized = SER(meta_inv_table)
-                                local inv_indices = string.match(meta_inv_serialized, "return ({.*})") or ""
-                                if inv_indices == "{_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1]}" then
-                                    inv_indices = "[All 27 inv items same]"
-                                    -- meta_inv = { meta_inv[1] }
-                                end--]]
-                                -- output = output .. C("#eff", "\nPointed Node Inv: " .. dump((meta_inv)) .. "\n" .. tostring(inv_indices) .. "\n")
-                                output = output .. C("#eff", "\nPointed Node Inv (" .. tostring(meta_inv_key) .. "): {\n" .. meta_inv_output --[[.. "\n" .. tostring(inv_indices)--]] .. "}\n")
+                                local dump_meta_inv = tmi.dump_meta_inv(meta_inv_table)
+                                output = output ..
+                                    C("#eff",
+                                        "\nPointed Node Inv (" ..
+                                        tostring(meta_inv_key) ..
+                                        "): {\n" ..
+                                        tostring(dump_meta_inv) --[[.. "\n" .. tostring(inv_indices)--]] .. "}\n")
                             end
-                            
                         end
                     end
+                    -- output = output .. dump_meta_inv
                 end
             elseif type == "object" then
                 local id = pointed_thing.id

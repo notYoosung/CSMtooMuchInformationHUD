@@ -19,11 +19,11 @@ local function basic_dump(o)
 		return tostring(o)
 	elseif tp == "nil" then
 		return "nil"
-	-- Uncomment for full function dumping support.
-	-- Not currently enabled because bytecode isn't very human-readable and
-	-- dump's output is intended for humans.
-	--elseif tp == "function" then
-	--	return string.format("loadstring(%q)", string.dump(o))
+		-- Uncomment for full function dumping support.
+		-- Not currently enabled because bytecode isn't very human-readable and
+		-- dump's output is intended for humans.
+		--elseif tp == "function" then
+		--	return string.format("loadstring(%q)", string.dump(o))
 	elseif tp == "userdata" then
 		return tostring(o)
 	else
@@ -41,7 +41,7 @@ local keywords = {
 	["false"] = true,
 	["for"] = true,
 	["function"] = true,
-	["goto"] = true,  -- Lua 5.2
+	["goto"] = true, -- Lua 5.2
 	["if"] = true,
 	["in"] = true,
 	["local"] = true,
@@ -63,17 +63,19 @@ local function is_valid_identifier(str)
 end
 
 local function pairsByKeys(t, f)
-    local a = {}
-    for n in pairs(t) do table.insert(a, n) end
-    table.sort(a, f)
-    local i = 0
-    local iter = function ()
-        i = i + 1
-        if a[i] == nil then return nil
-        else return a[i], t[a[i]]
-        end
-    end
-    return iter
+	local a = {}
+	for n in pairs(t) do table.insert(a, n) end
+	table.sort(a, f)
+	local i = 0
+	local iter = function()
+		i = i + 1
+		if a[i] == nil then
+			return nil
+		else
+			return a[i], t[a[i]]
+		end
+	end
+	return iter
 end
 function tmi.dump_sorted(o, indent, nested, level)
 	local t = type(o)
@@ -103,22 +105,22 @@ function tmi.dump_sorted(o, indent, nested, level)
 	for k, v in pairsByKeys(o) do
 		if not dumped_indexes[k] then
 			if type(k) ~= "string" or not is_valid_identifier(k) then
-				k = "["..dump(k, indent, nested, level + 1).."]"
+				k = "[" .. dump(k, indent, nested, level + 1) .. "]"
 			end
 			v = dump(v, indent, nested, level + 1)
-			ret[#ret + 1] = k.." = "..v
+			ret[#ret + 1] = k .. " = " .. v
 		end
 	end
 	nested[o] = nil
 	if indent ~= "" then
-		local indent_str = "\n"..string.rep(indent, level)
-		local end_indent_str = "\n"..string.rep(indent, level - 1)
+		local indent_str = "\n" .. string.rep(indent, level)
+		local end_indent_str = "\n" .. string.rep(indent, level - 1)
 		return string.format("{%s%s%s}",
-				indent_str,
-				table.concat(ret, ","..indent_str),
-				end_indent_str)
+			indent_str,
+			table.concat(ret, "," .. indent_str),
+			end_indent_str)
 	end
-	return "{"..table.concat(ret, ", ").."}"
+	return "{" .. table.concat(ret, ", ") .. "}"
 end
 
 --[[ tModule is something like this
@@ -217,7 +219,8 @@ function tmi.formShow()
 			if b and '' ~= s then textbox_sOut = textbox_sOut .. s .. '\n' end
 		end -- loop modules
 
-		sOut = sOut .. "textarea[5,0;5," .. F(tostring(iMax * .5 + 1.5)) .. ";textbox_tmi_gui;;" .. F(textbox_sOut) .. "]"
+		sOut = sOut ..
+			"textarea[5,0;5," .. F(tostring(iMax * .5 + 1.5)) .. ";textbox_tmi_gui;;" .. F(textbox_sOut) .. "]"
 	end
 
 
@@ -400,7 +403,7 @@ function tmi.toggleModule(index)
 	if not bIsTurningOn then
 		tmi.removeHUD()
 	end
-end -- toggleModule
+end                                                                        -- toggleModule
 
 function tmi.twoDigitNumberString(iN) return string.format('%02i', iN) end -- twoDigitNumberString
 
@@ -439,3 +442,61 @@ function tmi.update()
 end -- update
 
 --print('loaded functions.lua')
+
+
+
+function tmi.strip_esc(str)
+	return tostring(str):gsub("\\?27%([cT].-%)", ""):gsub("\\?27[FE]", "")
+end
+
+local empty_table_dump = dump({})
+local empty_table_ser = SER({})
+local empty_fields_table_dump = dump({ fields = {} })
+local empty_fields_table_ser = SER({ fields = {} })
+
+
+function tmi.dump_meta_inv(meta_inv_table)
+	if meta_inv_table then
+		local meta_inv_table_counts = {}
+		for meta_inv_table_index, meta_inv_table_itemstack in pairs(meta_inv_table) do
+			local itemstack_str = tostring(meta_inv_table_itemstack)
+			if meta_inv_table_itemstack and meta_inv_table_itemstack.get_meta then
+				local itemstack_meta = meta_inv_table_itemstack:get_meta()
+				if itemstack_meta then
+					local itemstack_meta_table = itemstack_meta:to_table()
+					if itemstack_meta_table then
+						local ser = tmi.strip_esc(SER(itemstack_meta_table))
+						if ser ~= empty_fields_table_ser then
+							itemstack_str = itemstack_str .. " - " .. ser
+						end
+					end
+				end
+			end
+			local previous_count_data = meta_inv_table_counts[#meta_inv_table_counts]
+			if previous_count_data and previous_count_data.itemstack_str == itemstack_str then
+				meta_inv_table_counts[#meta_inv_table_counts].count = (previous_count_data.count or 0) + 1
+			else
+				meta_inv_table_counts[#meta_inv_table_counts + 1] = {
+					itemstack_str = itemstack_str,
+					count = 1,
+				}
+			end
+		end
+		local meta_inv_output = ""
+		for indx, count_data in ipairs(meta_inv_table_counts) do
+			meta_inv_output = meta_inv_output ..
+				tostring(count_data.itemstack_str):gsub("ItemStack%((.*)%)", "%1") ..
+				" " .. string.format("%3s", "x" .. (count_data.count or 0)) .. ",    \n"
+		end
+		--[[local meta_inv_serialized = SER(meta_inv_table)
+			local inv_indices = string.match(meta_inv_serialized, "return ({.*})") or ""
+			if inv_indices == "{_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1]}" then
+				inv_indices = "[All 27 inv items same]"
+				-- meta_inv = { meta_inv[1] }
+			end--]]
+		-- output = output .. C("#eff", "\nPointed Node Inv: " .. dump((meta_inv)) .. "\n" .. tostring(inv_indices) .. "\n")
+		return meta_inv_output
+	else
+		return ""
+	end
+end

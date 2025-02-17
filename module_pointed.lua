@@ -26,6 +26,7 @@ minetest.camera:
 ]]
 local camera = tmi.camera
 local reach_length = 16
+local empty_table_dump = dump({ })
 local empty_fields_table_dump = dump({ fields = {} })
 local function update(index)
     if not camera then
@@ -61,19 +62,23 @@ local function update(index)
                     if meta_table and meta_table_dump ~= empty_fields_table_dump then
                         local meta_fields = meta_table.fields
                         if meta_fields then
-                            if SER(meta_fields) == SER({}) then
-                                meta_table.fields = nil
-                            else
-                                meta_table.fields.formspec = nil
-                                if meta_fields.description then
-                                    meta_table.fields.description = tostring(meta_fields.description):gsub("\\?27%([cT].-%)", ""):gsub("\\?27[FE]", "")
-                                end
+                            meta_table.fields.formspec = nil
+                            if meta_fields.description then
+                                meta_table.fields.description = tostring(meta_fields.description):gsub("\\?27%([cT].-%)", ""):gsub("\\?27[FE]", "")
                             end
                         end
                         local meta_inv = meta_table.inventory
                         if meta_inv then
                             meta_table.inventory = nil
                         end
+
+                        if meta_fields then
+                            local meta_fields_dump = dump(meta_fields)
+                            if meta_fields_dump == empty_table_dump or meta_fields_dump == empty_fields_table_dump then
+                                meta_table.fields = nil
+                            end
+                        end
+
                         output = output .. C("#eff", "\nPointed Node Meta: " .. tmi.dump_sorted(meta_table) .. "\n")
                         if meta_inv then
                             for meta_inv_key, meta_inv_table in pairs(meta_inv) do

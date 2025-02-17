@@ -42,7 +42,7 @@ local function update(index)
 			if meta_inv_serialized then
 				output = C("#eff",
 					"\nWielded Item Inv: " ..
-					tmi.dump_sorted(DES(meta_inv_serialized)) .. "\n" .. tostring(inv_indices) .. "\n")
+					((meta_inv_serialized)) .. "\n" .. tostring(inv_indices) .. "\n")
 			end
 		end
 	end

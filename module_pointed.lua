@@ -97,7 +97,7 @@ local function update(index)
                                 end
                                 local meta_inv_output = ""
                                 for indx, count_data in ipairs(meta_inv_table_counts) do
-                                    meta_inv_output = meta_inv_output .. tostring(count_data.itemstack_str):gsub("ItemStack%((.*)%)", "%1") .. " x" .. (count_data.count or 0) .. ",\n"
+                                    meta_inv_output = meta_inv_output .. tostring(count_data.itemstack_str):gsub("ItemStack%((.*)%)", "%1") .. " x" .. (count_data.count or 0) .. ",    \n"
                                 end
                                 --[[local meta_inv_serialized = SER(meta_inv_table)
                                 local inv_indices = string.match(meta_inv_serialized, "return ({.*})") or ""

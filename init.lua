@@ -105,3 +105,4 @@ minetest.register_on_receiving_chat_message(function(message)
 	minetest.display_chat_message("[" .. time .. "] " .. message)
 	return true
 end)
+-- TODO: damage logging; chat logging

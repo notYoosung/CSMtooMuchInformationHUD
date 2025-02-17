@@ -19,7 +19,7 @@ local function update(index)
 
 	if oMeta then
 		local meta_table = oMeta:to_table()
-		if meta_table and SER(meta_table) ~= SER({}) then
+		if meta_table then
 			local inv_indices
 			local meta_inv_serialized = "" -- prevent any edge cases and extra checks
 			local meta_fields = meta_table.fields

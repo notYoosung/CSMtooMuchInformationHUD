@@ -26,7 +26,7 @@ minetest.camera:
 ]]
 local camera = tmi.camera
 local reach_length = 16
-local empty_fields_table = { fields = {} }
+local empty_fields_table_dump = dump({ fields = {} })
 local function update(index)
     if not camera then
         camera = tmi.camera
@@ -57,7 +57,8 @@ local function update(index)
                 if node_meta then
                     local meta_table = node_meta:to_table()
                     -- output = output .. "Pointed Node Meta: " .. dump(meta_table)
-                    if meta_table and SER(meta_table) ~= SER({}) then
+                    local meta_table_dump = dump(meta_table)
+                    if meta_table and meta_table_dump ~= empty_fields_table_dump then
                         local meta_fields = meta_table.fields
                         if meta_fields then
                             if SER(meta_fields) == SER({}) then
@@ -74,21 +75,29 @@ local function update(index)
                             meta_table.inventory = nil
                         end
                         output = output .. C("#eff", "\nPointed Node Meta: " .. tmi.dump_sorted(meta_table) .. "\n")
+                        local counts = {}
                         if meta_inv then
+                            for k, v in pairs(meta_inv) do
+                                counts[v] = (counts[v] or 0) + 1
+                            end
+                            local meta_inv_output = ""
+                            for k, v in pairs(counts) do
+                                meta_inv_output = meta_inv_output .. tostring(k) .. " x" .. tostring(v) .. ",\n"
+                            end
                             local meta_inv_serialized = tostring(meta_inv)
                             local inv_indices = string.match(meta_inv_serialized, "return ({.*})") or ""
                             if inv_indices == "{_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1]}" then
                                 inv_indices = "[All 27 inv items same]"
-                                meta_inv = { meta_inv[1] }
+                                -- meta_inv = { meta_inv[1] }
                             end
-                            output = output .. C("#eff",
-                                "\nPointed Node Inv: " .. dump((meta_inv)) .. "\n" .. tostring(inv_indices) .. "\n")
+                            -- output = output .. C("#eff", "\nPointed Node Inv: " .. dump((meta_inv)) .. "\n" .. tostring(inv_indices) .. "\n")
+                            output = output .. C("#eff", "\nPointed Node Inv: " .. meta_inv_output .. "\n" .. tostring(inv_indices) .. "\n")
                         end
                     end
                 end
             elseif type == "object" then
                 local id = pointed_thing.id
-                output = output .. C("#eff", "\nPointed Entity Meta: " .. dump(id) .. "\n")
+                output = output .. C("#eff", "\nPointed Entity Meta: " .. dump(id))
             end
         end
     end

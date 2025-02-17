@@ -6,6 +6,7 @@
 local C = minetest.colorize
 local F = minetest.formspec_escape
 local SER = minetest.serialize
+local DES = minetest.deserialize
 
 
 local function update(index)
@@ -18,14 +19,14 @@ local function update(index)
 
 	if oMeta then
 		local meta_table = oMeta:to_table()
-		if meta_table and meta_table ~= {} then
+		if meta_table and SER(meta_table) ~= SER({}) then
 			local inv_indices
 			local meta_inv_serialized = "" -- prevent any edge cases and extra checks
 			local meta_fields = meta_table.fields
-			if meta_fields and meta_fields ~= {} then
+			if meta_fields and SER(meta_fields) ~= SER({}) then
 				meta_inv_serialized = meta_fields.inv
 				if meta_fields.tool_capabilities then
-					meta_table.fields.tool_capabilities = tmi.dump_sorted(minetest.deserialize("return " .. meta_fields.tool_capabilities))
+					meta_table.fields.tool_capabilities = tmi.dump_sorted(DES("return " .. meta_fields.tool_capabilities))
 				end
 				meta_table.fields.description = nil
 				if meta_inv_serialized then
@@ -33,7 +34,7 @@ local function update(index)
 					inv_indices = string.match(meta_inv_serialized, "return ({[_\"].*})")
 					if inv_indices == "{_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1]}" then
 						inv_indices = "[All 27 inv items same]"
-						meta_inv_serialized = SER({ minetest.deserialize(meta_inv_serialized)[1] })
+						meta_inv_serialized = SER({ DES(meta_inv_serialized)[1] })
 					end
 				end
 			end
@@ -41,7 +42,7 @@ local function update(index)
 			if meta_inv_serialized then
 				output = C("#eff",
 					"\nWielded Item Inv: " ..
-					tmi.dump_sorted(minetest.deserialize(meta_inv_serialized)) .. "\n" .. tostring(inv_indices) .. "\n")
+					tmi.dump_sorted(DES(meta_inv_serialized)) .. "\n" .. tostring(inv_indices) .. "\n")
 			end
 		end
 	end

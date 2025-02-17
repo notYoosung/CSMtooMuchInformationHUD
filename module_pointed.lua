@@ -6,6 +6,7 @@
 local C = minetest.colorize
 local F = minetest.formspec_escape
 local SER = minetest.serialize
+local DES = minetest.deserialize
 
 local sin = math.sin
 local cos = math.cos
@@ -25,6 +26,7 @@ minetest.camera:
 ]]
 local camera = tmi.camera
 local reach_length = 16
+local empty_fields_table = { fields = {} }
 local function update(index)
     if not camera then
         camera = tmi.camera
@@ -55,29 +57,38 @@ local function update(index)
                 if node_meta then
                     local meta_table = node_meta:to_table()
                     -- output = output .. "Pointed Node Meta: " .. dump(meta_table)
-                    if meta_table and meta_table ~= {} then
-                        if meta_table.fields and meta_table.fields == {} then
-                            meta_table.fields = nil
+                    if meta_table and SER(meta_table) ~= SER({}) then
+                        local meta_fields = meta_table.fields
+                        if meta_fields then
+                            if SER(meta_fields) == SER({}) then
+                                meta_table.fields = nil
+                            else
+                                meta_table.fields.formspec = nil
+                                if meta_fields.description then
+                                    meta_table.fields.description = tostring(meta_fields.description):gsub("\\?27%([cT].-%)", ""):gsub("\\?27[FE]", "")
+                                end
+                            end
                         end
                         local meta_inv = meta_table.inventory
                         if meta_inv then
+                            meta_table.inventory = nil
+                        end
+                        output = output .. C("#eff", "\nPointed Node Meta: " .. tmi.dump_sorted(meta_table) .. "\n")
+                        if meta_inv then
                             local meta_inv_serialized = tostring(meta_inv)
-                            meta_table.inv = nil
-                            meta_table.formspec = nil
                             local inv_indices = string.match(meta_inv_serialized, "return ({.*})") or ""
                             if inv_indices == "{_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1]}" then
                                 inv_indices = "[All 27 inv items same]"
                                 meta_inv = { meta_inv[1] }
                             end
-                            output = output .. minetest.colorize("#eff", "\nPointed Node Meta: " .. tmi.dump_sorted(meta_table) .. "\n")
-                            output = output .. minetest.colorize("#eff",
-                                "\nPointed Node Inv: " .. dump((meta_inv_serialized)) .. "\n" .. tostring(inv_indices) .. "\n")
+                            output = output .. C("#eff",
+                                "\nPointed Node Inv: " .. dump((meta_inv)) .. "\n" .. tostring(inv_indices) .. "\n")
                         end
                     end
                 end
             elseif type == "object" then
                 local id = pointed_thing.id
-                output = output .. minetest.colorize("#eff", "\nPointed Entity Meta: " .. dump(id) .. "\n")
+                output = output .. C("#eff", "\nPointed Entity Meta: " .. dump(id) .. "\n")
             end
         end
     end

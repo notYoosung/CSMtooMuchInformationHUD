@@ -160,7 +160,7 @@ function tmi.formInput(formname, fields)
 
 	local m
 	for k, v in pairs(fields) do
-		index = tonumber(k)
+		local index = tonumber(k)
 		if index then
 			tmi.toggleModule(index)
 		elseif 'b_' == k:sub(1, 2) then
@@ -261,6 +261,7 @@ function tmi.init()
 			text = 'Too Much Info HUD',
 			scale = { x = 200, y = 60 },
 			alignment = { x = -1, y = -1 },
+			size = 0.5,
 		}
 		tmi.hudID = tmi.player:hud_add(tHud)
 	end

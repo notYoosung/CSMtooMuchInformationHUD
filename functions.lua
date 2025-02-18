@@ -190,7 +190,7 @@ function tmi.formShow()
 
 	local iX = .5
 	local iY = .25
-	local sOut = 'size[10,' .. F(tostring(iMax * .5 + 1.5)) .. ']'
+	local sOut = 'size[15,' .. F(tostring(iMax * .5 + 1.5)) .. ']'
 		.. 'checkbox[' .. F(tostring(iX)) .. ',' .. F(tostring(iY)) .. ';'
 		.. '0;Main;' .. F(tostring(tmi.isOn('__tmi__'))) .. ']'
 
@@ -220,7 +220,7 @@ function tmi.formShow()
 		end -- loop modules
 
 		sOut = sOut ..
-			"textarea[5,0;5," .. F(tostring(iMax * .5 + 1.5)) .. ";textbox_tmi_gui;;" .. F(textbox_sOut) .. "]"
+			"textarea[5,0;10," .. F(tostring(iMax * .5 + 1.5)) .. ";textbox_tmi_gui;;" .. F(textbox_sOut) .. "]"
 	end
 
 
@@ -444,11 +444,72 @@ end -- update
 --print('loaded functions.lua')
 
 
+--[[
+Players: tarmo
+161.97.183.176/161.97.183.176:30000v46-en_US/
+CSM: 111111
 
-local full_inv_pattern = "%{_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1],_[1]%}"--"%{" .. string.rep("_[1],", 26) .. "_[1]%}"
+Wielded Item Meta: {
+	fields = {
+		name = "Gear Kit 4.2.2025"
+	}
+}
+
+Wielded Item Inv: {
+mcl_tools:pick_netherite_enchanted 1 0 "–groupcaps_hash–f22fcd20–tool_capabilities–{\"damage_groups\":{\"fleshy\":6},\"full_punch_interval\":0.83333331346511841,\"groupcaps\":{\"pickaxey_dig_default\":{\"maxlevel\":0,\"times\":[null,0.0,0.10000000149011612,0.10000000149011612,0.10000000149011612,0.15000000596046448,0.15000000596046448,0.15000000596046448,0.20000000298023224,0.20000000298023224,0.25,0.30000001192092896,0.30000001192092896,0.40000000596046448,0.44999998807907104,0.5,0.60000002384185791,0.64999997615814209,0.75,1.0,1.2999999523162842,1.7000000476837158,2.2999999523162842,3.0,3.2000000476837158,4.25,7.0500001907348633],\"uses\":8124},\"pickaxey_dig_diamond\":{\"maxlevel\":0,\"times\":[null,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.10000000149011612,0.10000000149011612,0.10000000149011612,0.10000000149011612,0.10000000149011612,0.15000000596046448,0.15000000596046448,0.15000000596046448,0.20000000298023224,0.20000000298023224,0.25,0.30000001192092896,0.40000000596046448,0.55000001192092896,0.69999998807907104,0.89999997615814209,1.0,1.2999999523162842,2.1500000953674316],\"uses\":8124}},\"max_drop_level\":5,\"punch_attack_uses\":1016}–description–Netherite Pickaxe–Silk Touch–Unbreaking III–Mending–Efficiency V–Mining speed: Extremely fast–Durability: 8124/8124–Block breaking strength: 5–Damage: 6–Full punch interval: 0.83s–mcl_enchanting:enchantments–return {silk_touch=1,mending=1,efficiency=5,unbreaking=3}–"  x1,    
+mcl_tools:axe_netherite_enchanted 1 0 "–groupcaps_hash–25fee0ab–tool_capabilities–{\"damage_groups\":{\"fleshy\":10},\"full_punch_interval\":1.0,\"groupcaps\":{\"axey_dig\":{\"maxlevel\":0,\"times\":[null,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.10000000149011612,0.10000000149011612,0.15000000596046448,0.15000000596046448],\"uses\":8124}},\"max_drop_level\":5,\"punch_attack_uses\":1016}–description–Netherite Axe–Silk Touch–Smite V–Mending–Unbreaking III–Efficiency V–Mining speed: Extremely fast–Durability: 6248/6248–Block breaking strength: 5–Damage: 9–Full punch interval: 1.00s–mcl_enchanting:enchantments–return {silk_touch=1,smite=5,mending=1,unbreaking=3,efficiency=5}–"  x1,    
+mcl_farming:hoe_netherite_enchanted 1 0 "–groupcaps_hash–0bf30d73–tool_capabilities–{\"damage_groups\":{\"fleshy\":4},\"full_punch_interval\":0.25,\"groupcaps\":{\"hoey_dig\":{\"maxlevel\":0,\"times\":[null,0.0,0.0,0.0,0.0,0.0,0.0,0.15000000596046448],\"uses\":8124}},\"max_drop_level\":1,\"punch_attack_uses\":2031}–mcl_enchanting:enchantments–return {unbreaking=3,mending=1,efficiency=5,silk_touch=1}–description–Netherite Hoe–Mending–Silk Touch–Unbreaking III–Efficiency V––Turns block into farmland–Durability: 6248/6248–Block breaking strength: 1–Damage: 1–Full punch interval: 0.25s–"  x1,    
+mcl_tools:shovel_netherite_enchanted 1 0 "–groupcaps_hash–be76b34e–tool_capabilities–{\"damage_groups\":{\"fleshy\":5},\"full_punch_interval\":1.0,\"groupcaps\":{\"shovely_dig\":{\"maxlevel\":0,\"times\":[null,0.0,0.0,0.0,0.0,0.0,0.0],\"uses\":8124}},\"max_drop_level\":5,\"punch_attack_uses\":1016}–description–Netherite Shovel–Mending–Silk Touch–Unbreaking III–Efficiency V–Mining speed: Extremely fast–Durability: 6248/6248–Block breaking strength: 5–Damage: 5–Full punch interval: 1.00s–mcl_enchanting:enchantments–return {mending=1,silk_touch=1,unbreaking=3,efficiency=5}–"  x1,    
+mcl_armor:helmet_netherite_enchanted 1 0 "–inventory_image–mcl_armor_inv_helmet_netherite.png^[colorize:purple:50^(helmet_trim.png^[colorize:#302a26:150)–mcl_armor:inv–^(helmet_trim.png^[colorize:#302a26:150)–mcl_armor:trim_overlay–^(rib_helmet.png^[colorize:#302a26:150)–mcl_enchanting:enchantments–return {protection=4,thorns=3,mending=1,unbreaking=3}–description–Netherite Helmet–Protection IV–Thorns III–Mending–Unbreaking III––Head armor–Armor points: 3–Armor durability: 544–Upgrade:– Rib Armor Trim–"  x1,    
+mcl_armor:chestplate_netherite_enchanted 1 0 "–inventory_image–mcl_armor_inv_chestplate_netherite.png^[colorize:purple:50^(chestplate_trim.png^[colorize:#302a26:150)–mcl_armor:inv–^(chestplate_trim.png^[colorize:#302a26:150)–mcl_armor:trim_overlay–^(rib_chestplate.png^[colorize:#302a26:150)–mcl_enchanting:enchantments–return {protection=4,thorns=3,mending=1,unbreaking=3}–description–Netherite Chestplate–Protection IV–Thorns III–Mending–Unbreaking III––Torso armor–Armor points: 8–Armor durability: 794–Upgrade:– Rib Armor Trim–"  x1,    
+mcl_armor:leggings_netherite_enchanted 1 0 "–inventory_image–mcl_armor_inv_leggings_netherite.png^[colorize:purple:50^(leggings_trim.png^[colorize:#302a26:150)–mcl_armor:inv–^(leggings_trim.png^[colorize:#302a26:150)–mcl_armor:trim_overlay–^(rib_leggings.png^[colorize:#302a26:150)–mcl_enchanting:enchantments–return {protection=4,thorns=3,mending=1,unbreaking=3}–description–Netherite Leggings–Protection IV–Thorns III–Mending–Unbreaking III––Legs armor–Armor points: 6–Armor durability: 744–Upgrade:– Rib Armor Trim–"  x1,    
+mcl_armor:boots_netherite_enchanted 1 0 "–inventory_image–mcl_armor_inv_boots_netherite.png^[colorize:purple:50^(boots_trim.png^[colorize:#302a26:150)–mcl_armor:inv–^(boots_trim.png^[colorize:#302a26:150)–mcl_armor:trim_overlay–^(rib_boots.png^[colorize:#302a26:150)–mcl_enchanting:enchantments–return {protection=4,thorns=3,unbreaking=3,depth_strider=3,feather_falling=4,soul_speed=3,mending=1}–description–Netherite Boots–Protection IV–Thorns III–Unbreaking III–Depth Strider III–Feather Falling IV–Mending–Soul Speed III––Feet armor–Armor points: 3–Armor durability: 644–Upgrade:– Rib Armor Trim–"  x1,    
+mcl_armor:elytra_enchanted 1 0 "–description–Elytra–Mending–Unbreaking III––Torso armor–Armor durability: 14–mcl_enchanting:enchantments–return {mending=1,unbreaking=3}–"  x1,    
+mcl_tools:pick_netherite_enchanted 1 0 "–groupcaps_hash–f22fcd20–tool_capabilities–{\"damage_groups\":{\"fleshy\":6},\"full_punch_interval\":0.83333331346511841,\"groupcaps\":{\"pickaxey_dig_default\":{\"maxlevel\":0,\"times\":[null,0.0,0.10000000149011612,0.10000000149011612,0.10000000149011612,0.15000000596046448,0.15000000596046448,0.15000000596046448,0.20000000298023224,0.20000000298023224,0.25,0.30000001192092896,0.30000001192092896,0.40000000596046448,0.44999998807907104,0.5,0.60000002384185791,0.64999997615814209,0.75,1.0,1.2999999523162842,1.7000000476837158,2.2999999523162842,3.0,3.2000000476837158,4.25,7.0500001907348633],\"uses\":8124},\"pickaxey_dig_diamond\":{\"maxlevel\":0,\"times\":[null,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.10000000149011612,0.10000000149011612,0.10000000149011612,0.10000000149011612,0.10000000149011612,0.15000000596046448,0.15000000596046448,0.15000000596046448,0.20000000298023224,0.20000000298023224,0.25,0.30000001192092896,0.40000000596046448,0.55000001192092896,0.69999998807907104,0.89999997615814209,1.0,1.2999999523162842,2.1500000953674316],\"uses\":8124}},\"max_drop_level\":5,\"punch_attack_uses\":1016}–description–Netherite Pickaxe–Fortune III–Mending–Unbreaking III–Efficiency V–Mining speed: Extremely fast–Durability: 6248/6248–Block breaking strength: 5–Damage: 5–Full punch interval: 0.83s–mcl_enchanting:enchantments–return {fortune=3,mending=1,unbreaking=3,efficiency=5}–"  x1,    
+mcl_tools:axe_netherite_enchanted 1 0 "–groupcaps_hash–25fee0ab–tool_capabilities–{\"damage_groups\":{\"fleshy\":10},\"full_punch_interval\":1.0,\"groupcaps\":{\"axey_dig\":{\"maxlevel\":0,\"times\":[null,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.10000000149011612,0.10000000149011612,0.15000000596046448,0.15000000596046448],\"uses\":8124}},\"max_drop_level\":5,\"punch_attack_uses\":1016}–description–Netherite Axe–Sharpness V–Mending–Fortune III–Unbreaking III–Efficiency V–Mining speed: Extremely fast–Durability: 6248/6248–Block breaking strength: 5–Damage: 11–Full punch interval: 1.00s–mcl_enchanting:enchantments–return {mending=1,fortune=3,sharpness=5,unbreaking=3,efficiency=5}–"  x1,    
+mcl_farming:hoe_netherite_enchanted 1 0 "–groupcaps_hash–0bf30d73–tool_capabilities–{\"damage_groups\":{\"fleshy\":4},\"full_punch_interval\":0.25,\"groupcaps\":{\"hoey_dig\":{\"maxlevel\":0,\"times\":[null,0.0,0.0,0.0,0.0,0.0,0.0,0.15000000596046448],\"uses\":8124}},\"max_drop_level\":1,\"punch_attack_uses\":2031}–description–Netherite Hoe–Fortune III–Mending–Unbreaking III–Efficiency V––Turns block into farmland–Durability: 6248/6248–Block breaking strength: 1–Damage: 1–Full punch interval: 0.25s–mcl_enchanting:enchantments–return {fortune=3,mending=1,unbreaking=3,efficiency=5}–"  x1,    
+mcl_tools:shovel_netherite_enchanted 1 0 "–groupcaps_hash–be76b34e–tool_capabilities–{\"damage_groups\":{\"fleshy\":5},\"full_punch_interval\":1.0,\"groupcaps\":{\"shovely_dig\":{\"maxlevel\":0,\"times\":[null,0.0,0.0,0.0,0.0,0.0,0.0],\"uses\":8124}},\"max_drop_level\":5,\"punch_attack_uses\":1016}–description–Netherite Shovel–Mending–Fortune III–Unbreaking III–Efficiency V–Mining speed: Extremely fast–Durability: 6248/6248–Block breaking strength: 5–Damage: 5–Full punch interval: 1.00s–mcl_enchanting:enchantments–return {mending=1,fortune=3,unbreaking=3,efficiency=5}–"  x1,    
+mcl_bows:bow_enchanted 1 0 "–description–Bow–Power V–Flame–Punch II–Unbreaking III–Infinity––Launches arrows–Durability: 1540/1540 uses–mcl_enchanting:enchantments–return {power=5,flame=1,punch=2,unbreaking=3,infinity=1}–"  x1,    
+mcl_bows:arrow 64  x1,    
+mcl_mobitems:warped_fungus_on_a_stick  x1,    
+mcl_mobitems:carrot_on_a_stick  x1,    
+vl_fireworks:rocket 64 0 "–vl_fireworks:duration–6–vl_fireworks:force–30–vl_fireworks:stars–return {\"return {size=2,fn=\\\"generic\\\"}\"}–description–Firework Rocket–Flight Duration: 6––Generic Firework Star–Size: 2–"  x1,    
+mcl_tools:sword_netherite_enchanted 1 0 "–mcl_enchanting:enchantments–return {fire_aspect=2,unbreaking=3,sharpness=5,mending=1,looting=3,knockback=2}–tool_capabilities–{\"damage_groups\":{\"fleshy\":11},\"full_punch_interval\":0.625,\"groupcaps\":{\"swordy_cobweb_dig\":{\"maxlevel\":0,\"times\":[null,0.69999998807907104],\"uses\":8124},\"swordy_dig\":{\"maxlevel\":0,\"times\":[null,0.0,0.15000000596046448,0.20000000298023224],\"uses\":8124}},\"max_drop_level\":5,\"punch_attack_uses\":8124}–groupcaps_hash–4eaca884–description–Netherite Sword–Knockback II–Fire Aspect II–Sharpness V–Unbreaking III–Looting III–Mending–Damage: 11–Full punch interval: 0.63s–Mining speed: Very fast–Durability: 8124/8124–Block breaking strength: 5–"  x1,    
+mcl_tools:sword_netherite_enchanted 1 0 "–groupcaps_hash–fc031739–tool_capabilities–{\"damage_groups\":{\"fleshy\":9},\"full_punch_interval\":0.625,\"groupcaps\":{\"swordy_cobweb_dig\":{\"maxlevel\":0,\"times\":[null,0.69999998807907104],\"uses\":8124},\"swordy_dig\":{\"maxlevel\":0,\"times\":[null,0.0,0.15000000596046448,0.20000000298023224],\"uses\":8124}},\"max_drop_level\":5,\"punch_attack_uses\":2031}–description–Netherite Sword–Looting III–Fire Aspect II–Mending–Smite V–Knockback II–Unbreaking III–Damage: 7–Full punch interval: 0.63s–Mining speed: Very fast–Durability: 6248/6248–Block breaking strength: 5–mcl_enchanting:enchantments–return {looting=3,fire_aspect=2,mending=1,knockback=2,unbreaking=3,smite=5}–"  x1,    
+mcl_tools:sword_netherite_enchanted 1 0 "–groupcaps_hash–fc031739–tool_capabilities–{\"damage_groups\":{\"fleshy\":9},\"full_punch_interval\":0.625,\"groupcaps\":{\"swordy_cobweb_dig\":{\"maxlevel\":0,\"times\":[null,0.69999998807907104],\"uses\":8124},\"swordy_dig\":{\"maxlevel\":0,\"times\":[null,0.0,0.15000000596046448,0.20000000298023224],\"uses\":8124}},\"max_drop_level\":5,\"punch_attack_uses\":2031}–description–Netherite Sword–Looting III–Bane of Arthropods V–Fire Aspect II–Mending–Knockback II–Unbreaking III–Damage: 7–Full punch interval: 0.63s–Mining speed: Very fast–Durability: 6248/6248–Block breaking strength: 5–mcl_enchanting:enchantments–return {looting=3,bane_of_arthropods=5,fire_aspect=2,mending=1,knockback=2,unbreaking=3}–"  x1,    
+mcl_fishing:fishing_rod_enchanted 1 0 "–mcl_enchanting:enchantments–return {mending=1,luck_of_the_sea=3,lure=3,unbreaking=3}–description–Fishing Rod–Mending–Luck of the Sea III–Lure III–Unbreaking III––Catches fish in water–Durability: 260/260 uses–"  x1,    
+mcl_tools:shears_enchanted 1 0 "–description–Shears–Mending–Efficiency V–Silk Touch–Unbreaking III–Mining speed: Fast–Durability: 952/952–Block breaking strength: 1–Full punch interval: 0.50s–groupcaps_hash–02e0a238–tool_capabilities–{\"damage_groups\":null,\"full_punch_interval\":0.5,\"groupcaps\":{\"shearsy_cobweb_dig\":{\"maxlevel\":0,\"times\":[null,0.15000000596046448],\"uses\":952},\"shearsy_dig\":{\"maxlevel\":0,\"times\":[null,0.0,0.0,0.0],\"uses\":952},\"shearsy_wool_dig\":{\"maxlevel\":0,\"times\":[null,0.0],\"uses\":952}},\"max_drop_level\":1,\"punch_attack_uses\":0}–mcl_enchanting:enchantments–return {mending=1,unbreaking=3,silk_touch=1,efficiency=5}–"  x1,    
+mcl_experience:bottle 64  x1,    
+mcl_farming:carrot_item_gold 64  x1,    
+mcl_core:apple_gold_enchanted 64  x1,    
+mcl_chests:ender_chest 64  x1,    
+}
+
+Gear Kit 4.2.2025
+27 inventory slots
+Can be carried around with its contents
+1 mcl_chests:black_shulker_box
+Durability: None  100%
+
+vX: 0 vY: 0 vZ: 0
+vXZ: 0 vXYZ: 0
+vmX: 7.99 vmY: 33.5 vmZ: 14.6
+vmXZ: 14.8 vmXYZ: 33.5
+
+D: 28'206   0n/s 0n/s max
+P: 3'552   0n/s 0n/s max
+U: 1'395
+D&P: 31'758
+Time: 15:38
+Elapsed: 00:00:45
+Node: 2462, -28832, 3690
+Block: 153, -1802, 230
+]]
+
+local full_inv_pattern = string.rep("_%[1%],", 26) .. "_%[1%]"
 function tmi.strip_esc(str)
-	return tostring(str):gsub("\\?27%([cT].-%)", ""):gsub("\\?27[FE]", ""):gsub(full_inv_pattern, "{_[1] x27}")
-	
+	--[[:gsub("\\?\\u%w%w%w%w%([cT].-%)?E?", "")]]
+	return tostring(str):gsub("\\?27%([cT].-%)", ""):gsub("\\?27[FE]", ""):gsub(full_inv_pattern, "_[1] x27"):gsub("\\?u000[123]", "–"):gsub("\\?u001b%b()", ""):gsub("\\?u001b[FE]", "")--:gsub("\\u%w%w%w%wE?", "")
 end
 
 local empty_table_dump = dump({})

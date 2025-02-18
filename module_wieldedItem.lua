@@ -43,12 +43,16 @@ local function update(index)
 				end
 			end
 			if SER(meta_table) ~= empty_fields_table_ser then
-				output = C("#eff", "\nWielded Item Meta: " .. tmi.strip_esc(tmi.dump_sorted(meta_table)) .. "\n")
+				output = output ..
+				C("#eff", "\nWielded Item Meta: " .. tmi.strip_esc(tmi.dump_sorted(meta_table)) .. "\n")
 			end
 			if meta_inv_serialized and meta_inv_serialized ~= "" then
-				output = C("#eff",
+				output = output .. C("#eff",
 					"\nWielded Item Inv: {\n" ..
-					tmi.dump_meta_inv(DES(meta_inv_serialized)) .. "}\n" .. tostring(inv_indices) .. "\n")
+					tmi.strip_esc(tmi.dump_meta_inv(DES(meta_inv_serialized)):gsub("\\n", "–")) .. "}\n")
+				if inv_indices and string.find(inv_indices, "_%[") then
+					output = output .. C("#eff", tmi.strip_esc(inv_indices) .. "\n")
+				end
 			end
 		end
 	end

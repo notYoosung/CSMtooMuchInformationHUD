@@ -84,7 +84,10 @@ local function update(index)
                             end
                         end
 
-                        output = output .. C("#eff", "\nPointed Node Meta: " .. tmi.dump_sorted(meta_table) .. "\n")
+                        local meta_table_dump_sorted = tmi.dump_sorted(meta_table)
+                        if meta_table_dump_sorted ~= empty_table_dump then
+                            output = output .. C("#eff", "\nPointed Node Meta: " .. meta_table_dump_sorted .. "\n")
+                        end
                         if meta_inv then
                             for meta_inv_key, meta_inv_table in pairs(meta_inv) do
                                 local dump_meta_inv = tmi.dump_meta_inv(meta_inv_table)
@@ -93,7 +96,7 @@ local function update(index)
                                         "\nPointed Node Inv (" ..
                                         tostring(meta_inv_key) ..
                                         "): {\n" ..
-                                        tostring(dump_meta_inv) --[[.. "\n" .. tostring(inv_indices)--]] .. "}\n")
+                                        tostring(dump_meta_inv) --[[.. "\n" .. tostring(inv_indices)--]] .. "\n}\n")
                             end
                         end
                     end

@@ -3,15 +3,15 @@
 -- displays player position in nodes and block coordinates
 -- taken from [PosTool]
 
-local C = minetest.colorize
-local F = minetest.formspec_escape
-local SER = minetest.serialize
-local DES = minetest.deserialize
+local C = core.colorize
+local F = core.formspec_escape
+local SER = core.serialize
+local DES = core.deserialize
 
 local sin = math.sin
 local cos = math.cos
 --[[
-minetest.camera:
+core.camera:
 2025-02-11 17:15:43: [Main]: userdata metatable: {
 	set_camera_mode = <function>,
 	get_camera_mode = <function>,
@@ -42,16 +42,16 @@ local function update(index)
     local eye_pos = camera:get_pos()
     local look_offset = vector.multiply(camera:get_look_dir(), reach_length)
     local look_reach_pos = vector.add(eye_pos, look_offset)
-    --[[minetest.add_particle({
+    --[[core.add_particle({
         pos = look_reach_pos,
         velocity = vector.new(0, 0, 0),
         acceleration = vector.new(0, 0, 0),
         expirationtime = tmi.conf.interval,
         size = 5,
         texture = "mobs_mc_glow_squid_glint1.png",
-        glow = minetest.LIGHT_MAX,
+        glow = core.LIGHT_MAX,
     })]]
-    local ray = minetest.raycast(eye_pos, look_reach_pos, true, false)
+    local ray = core.raycast(eye_pos, look_reach_pos, true, false)
     -- local playerent = ray:next()
     if ray then
         local pointed_thing = ray:next()
@@ -59,7 +59,7 @@ local function update(index)
             local type = pointed_thing.type
             if type == "node" then
                 local node_pos = pointed_thing.under
-                local node_meta = minetest.get_meta(node_pos)
+                local node_meta = core.get_meta(node_pos)
                 if node_meta then
                     local meta_table = node_meta:to_table()
                     -- output = output .. "Pointed Node Meta: " .. dump(meta_table)
@@ -137,7 +137,7 @@ tmi.addModule({
 Luanti Lua Client Modding API Reference 5.11.0
 ==============================================
 
-**WARNING**: if you're looking for the `minetest` namespace (e.g. `minetest.something`),
+**WARNING**: if you're looking for the `minetest` namespace (e.g. `core.something`),
 it's now called `core` due to the renaming of Luanti (formerly Minetest).
 `minetest` will keep existing as an alias, so that old code won't break.
 
@@ -173,7 +173,7 @@ the `init.lua` scripts in a shared environment.
 
 In order to load client-side mods, the following conditions need to be satisfied:
 
-1) `$path_user/minetest.conf` contains the setting `enable_client_modding = true`
+1) `$path_user/core.conf` contains the setting `enable_client_modding = true`
 
 2) The client-side mod located in `$path_user/clientmods/<modname>` is added to
     `$path_user/clientmods/mods.conf` as `load_mod_<modname> = true`.
@@ -731,7 +731,7 @@ Setting-related
 ---------------
 
 * `core.settings`: Settings object containing all of the settings from the
-  main config file (`minetest.conf`). Check lua_api.md for class reference.
+  main config file (`core.conf`). Check lua_api.md for class reference.
 * `core.setting_get_pos(name)`: Loads a setting from the main settings and
   parses it as a position (in the format `(1,2,3)`). Returns a position or nil.
 
@@ -946,7 +946,7 @@ Methods:
     * Returns `true` on success, otherwise returns `nil`
 
 ### Settings
-An interface to read config files in the format of `minetest.conf`.
+An interface to read config files in the format of `core.conf`.
 
 It can be created via `Settings(filename)`.
 

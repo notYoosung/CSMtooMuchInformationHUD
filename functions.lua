@@ -1,6 +1,6 @@
-local C = minetest.colorize
-local F = minetest.formspec_escape
-local SER = minetest.serialize
+local C = core.colorize
+local F = core.formspec_escape
+local SER = core.serialize
 
 
 --------------------------------------------------------------------------------

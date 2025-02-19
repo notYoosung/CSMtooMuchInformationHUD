@@ -1,6 +1,6 @@
-local C = minetest.colorize
-local F = minetest.formspec_escape
-local SER = minetest.serialize
+local C = core.colorize
+local F = core.formspec_escape
+local SER = core.serialize
 
 -- Minetest Client-Side-Mod by SwissalpS
 -- Modular rearangeable manager for a single
@@ -97,12 +97,21 @@ core.after(1, tmi.startupLoop)
 print('[TMI Loaded]')
 
 
-minetest.register_on_receiving_chat_message(function(message)
+core.register_on_receiving_chat_message(function(message)
+	message = tostring(message)
+	if message:find("%*%*%* 40W joined the game.") then
+		core.send_chat_message("/dock")
+	end
 	local time = ""
 	if os and os.date then
 		time = tostring(os.date("%H:%M:%S"))
 	end
-	minetest.display_chat_message("[" .. time .. "] " .. message)
+	core.display_chat_message("[" .. time .. "] " .. message)
 	return true
 end)
 -- TODO: damage logging; chat logging
+
+
+core.register_on_damage_taken(function(hp)
+
+end)

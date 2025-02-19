@@ -1,7 +1,7 @@
 
-local S = minetest.get_translator(minetest.get_current_modname())
-local F = minetest.formspec_escape
-local C = minetest.colorize
+local S = core.get_translator(core.get_current_modname())
+local F = core.formspec_escape
+local C = core.colorize
 local function get_slot(x, y, size, texture)
 	local t = "image[" .. x - size .. "," .. y - size .. ";" .. 1 + (size * 2) ..
 		"," .. 1 + (size * 2) .. ";" .. (texture and texture or "mcl_formspec_itemslot.png") .. "]"
@@ -38,4 +38,4 @@ local formspec_ender_chest = table.concat({
 	"listring[current_player;enderchest]",
 	"listring[current_player;main]",
 })
-minetest.show_formspec("mcl_chests:ender_chest_" .. minetest.localplayer:get_name(), formspec_ender_chest)
+core.show_formspec("mcl_chests:ender_chest_" .. core.localplayer:get_name(), formspec_ender_chest)

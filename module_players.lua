@@ -1,5 +1,5 @@
 local function update(index)
-    local player_names = minetest.get_player_names()
+    local player_names = core.get_player_names()
     if player_names then
     	return "Players: " .. table.concat(player_names, ", ")
     else

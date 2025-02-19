@@ -3,10 +3,10 @@
 -- shows some info about wielded item. Updating
 -- frequently so you can E.g. watch your dig count
 -- of tool or level continuesly.
-local C = minetest.colorize
-local F = minetest.formspec_escape
-local SER = minetest.serialize
-local DES = minetest.deserialize
+local C = core.colorize
+local F = core.formspec_escape
+local SER = core.serialize
+local DES = core.deserialize
 
 local empty_table_dump = dump({})
 local empty_table_ser = SER({})

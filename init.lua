@@ -112,11 +112,11 @@ end)
 -- TODO: damage logging; chat logging
 
 
-core.register_on_damage_taken(function(hp)
-	if tmi.store:get_bool("tmi:bool_combat_log") then
+--[[core.register_on_damage_taken(function(hp)
+	if tmi.store:get_string("tmi:bool_combat_log") then
 		core.disconnect()
 	end
-end)
+end)]]
 
 
 local function get_tmi_conf_formspec()

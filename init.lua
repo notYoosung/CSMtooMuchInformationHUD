@@ -48,33 +48,33 @@ local p = tmi.pathMod .. 'module_'
 -----------------------------------------------------
 --dofile(p .. 'debugChannel.lua') -- have not yet been able to use this
 --
-dofile(p .. 'pointed.lua') -- pointed node meta, etc.
+dofile(p .. 'pointed.lua')          -- pointed node meta, etc.
 --
-dofile(p .. 'players.lua') -- online playerlist
+dofile(p .. 'players.lua')          -- online playerlist
 --
-dofile(p .. 'serverInfo.lua') -- server ip, protocol version etc.
+dofile(p .. 'serverInfo.lua')       -- server ip, protocol version etc.
 --
-dofile(p .. 'wieldedItem.lua') -- description, wear and other info about wielded item
+dofile(p .. 'wieldedItem.lua')      -- description, wear and other info about wielded item
 --
-dofile(p .. 'v1.lua') -- velocity: vX, vY, vZ
+dofile(p .. 'v1.lua')               -- velocity: vX, vY, vZ
 --
-dofile(p .. 'v2.lua') -- velocity: vXZ, vXYZ
+dofile(p .. 'v2.lua')               -- velocity: vXZ, vXYZ
 --
-dofile(p .. 'vM.lua') -- max velocity: vX, vY, vZ, vXZ, vXYZ
+dofile(p .. 'vM.lua')               -- max velocity: vX, vY, vZ, vXZ, vXYZ
 --
-dofile(p .. 'countDig.lua') -- dig counter with speed and max
+dofile(p .. 'countDig.lua')         -- dig counter with speed and max
 --
-dofile(p .. 'countPlace.lua') -- build counter with speed and max
+dofile(p .. 'countPlace.lua')       -- build counter with speed and max
 --
-dofile(p .. 'countUse.lua') -- use counter
+dofile(p .. 'countUse.lua')         -- use counter
 --
 dofile(p .. 'countDigAndPlace.lua') -- added count of digs and builds
 --
-dofile(p .. 'time.lua') -- in-game time in 24h format
+dofile(p .. 'time.lua')             -- in-game time in 24h format
 --
-dofile(p .. 'timeElapsed.lua') -- real time passed
+dofile(p .. 'timeElapsed.lua')      -- real time passed
 --
-dofile(p .. 'pos.lua') -- current positon in nodes and mapblocks
+dofile(p .. 'pos.lua')              -- current positon in nodes and mapblocks
 --dofile(p .. 'timeMeseconsClear.lua') -- time since last penalty clear command
 -----------------------------------------------------
 -----------------------------------------------------
@@ -99,7 +99,7 @@ print('[TMI Loaded]')
 
 core.register_on_receiving_chat_message(function(message)
 	message = tostring(message)
-	if message:find("%*%*%* 40W joined the game.") then
+	if message:find("40W joined the game.") then
 		core.send_chat_message("/dock")
 	end
 	local time = ""
@@ -113,5 +113,60 @@ end)
 
 
 core.register_on_damage_taken(function(hp)
-
+	if tmi.store:get_bool("tmi:bool_combat_log") then
+		core.disconnect()
+	end
 end)
+
+
+local function get_tmi_conf_formspec()
+	local settings = tmi.store:to_table()
+
+	-- local extra_h = 1 -- not included in tabsize.height
+	local tabsize = {
+		width = 15.5,
+		height = 12,
+	}
+	local scrollbar_w = 0.4
+	local left_pane_width = 4.25
+	-- local left_pane_padding = 0.25
+	-- local search_width = left_pane_width + scrollbar_w - (0.75 * 2)
+	local back_w = 3
+	local checkbox_w = (tabsize.width - back_w - 2 * 0.2) / 2
+	local right_pane_width = tabsize.width - left_pane_width - 0.375 - 2 * scrollbar_w - 0.25
+
+	local tmi_keys = {}
+	for k, v in pairs(settings) do
+		if k:find("^tmi:") then
+			tmi_keys[k:gsub("^tmi:", "")] = v
+		end
+	end
+	local setting_elements = ""
+
+	local fs = {
+		"size[10,15]",
+	}
+	fs[#fs + 1] = ("scrollbar[%f,1.25;%f,%f;vertical;leftscroll;%f]"):format(
+		left_pane_width + 0.25, scrollbar_w, tabsize.height - 1.5, 0)
+	fs[#fs + 1] = ("scroll_container[%f,0;%f,%f;rightscroll;vertical;0.1;0.25]"):format(
+		tabsize.width - right_pane_width - scrollbar_w, right_pane_width, tabsize.height)
+
+	fs[#fs + 1] = ("checkbox[%f,%f;show_technical_names;%s;%s]"):format(
+		back_w + 2 * 0.2, tabsize.height + 0.6,
+		fgettext("Show technical names"), tostring(true))
+
+	fs[#fs + 1] = "scroll_container_end[]"
+	return table.concat(fs, "")
+end
+
+core.register_chatcommand("tmi_conf", {
+	description = "TMI configuration",
+	func = function(name, param)
+		core.show_formspec("tmi:tmi_conf", get_tmi_conf_formspec())
+
+		if param == "combat_log" then
+			tmi.store:set_bool("tmi:combat_log", not tmi.store:get_bool("tmi:combat_log"))
+			core.display_chat_message("TMI combat log: " .. tostring(tmi.store:get_bool("tmi:combat_log")))
+		end
+	end
+})

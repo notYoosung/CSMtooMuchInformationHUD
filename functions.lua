@@ -416,6 +416,10 @@ function tmi.update()
 	-- possibly re-run module's init-hook
 	if bMain and not tmi.hudID then return tmi.init() end
 
+
+	tmi.player_pos = tmi.player:get_pos()
+
+
 	local sOut = ''
 	local iMax = #tmi.modules
 	if 0 == iMax then return end

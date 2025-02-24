@@ -56,6 +56,7 @@ local function update(index)
     if ray then
         local pointed_thing = ray:next()
         if pointed_thing then
+            tmi.pointed_thing = pointed_thing
             local type = pointed_thing.type
             if type == "node" then
                 local node_pos = pointed_thing.under
@@ -106,6 +107,8 @@ local function update(index)
                 local id = pointed_thing.id
                 output = output .. C("#eff", "\nPointed Entity Meta: " .. dump(id))
             end
+        else
+            tmi.pointed_thing = nil
         end
     end
 

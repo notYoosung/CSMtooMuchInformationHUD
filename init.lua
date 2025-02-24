@@ -56,6 +56,8 @@ dofile(p .. 'serverInfo.lua')       -- server ip, protocol version etc.
 --
 dofile(p .. 'wieldedItem.lua')      -- description, wear and other info about wielded item
 --
+dofile(p .. 'lightLevels.lua')      -- light levels of pointed above/under and player pos
+--
 dofile(p .. 'v1.lua')               -- velocity: vX, vY, vZ
 --
 dofile(p .. 'v2.lua')               -- velocity: vXZ, vXYZ

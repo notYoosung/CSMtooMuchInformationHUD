@@ -78,7 +78,7 @@ tmi.addModule({
 	title = 'count place',
 	value = 'countPlace module',
 	onClear = module.clear,
-	onDealoc = module.save,
+	onDealloc = module.save,
 	onInit = module.init,
 	onUpdate = module.update,
 })

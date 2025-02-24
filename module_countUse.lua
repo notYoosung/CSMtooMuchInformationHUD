@@ -52,7 +52,7 @@ tmi.addModule({
 	title = 'count use',
 	value = 'countUse module',
 	onClear = module.clear,
-	onDealoc = module.save,
+	onDealloc = module.save,
 	onInit = module.init,
 	onUpdate = module.update,
 })

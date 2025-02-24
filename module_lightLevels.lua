@@ -1,6 +1,7 @@
 -- pointed above, below
 -- head, feet
 -- mark nodes with light level 0 ? will need particle displays & (frequent?) checks
+-- core.find_nodes_in_area_under_air(pos1, pos2, nodenames)
 
 local get_node_light = core.get_node_light()
 

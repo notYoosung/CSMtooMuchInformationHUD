@@ -75,7 +75,7 @@ tmi.addModule({
 	updateWhenHidden = true,
 	value = 'vM module',
 	onClear = vM.clear,
-	onDealoc = vM.save,
+	onDealloc = vM.save,
 	onInit = vM.init,
 	onUpdate = vM.update,
 })

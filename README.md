@@ -50,7 +50,7 @@ tModule = {
 	updateWhenHidden = false, -- run update() even if hidden
 	value = '---', -- current/default valuestring to display if onUpdate is not a function. (String)
 	onClear = nil, -- function to clear/reset or nil. When set, adds a button to formspec. This hook is called when button is pressed.
-	onDealoc = nil, -- function to run on shutdown or nil. E.g. to save data.
+	onDealloc = nil, -- function to run on shutdown or nil. E.g. to save data.
 	onHide = nil, -- function or nil. Called when module is deactivated in formspec
 	onInit = nil, -- function to run on startup or nil.
 				-- E.g. to read values from datastore.

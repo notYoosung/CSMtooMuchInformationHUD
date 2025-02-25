@@ -4,7 +4,6 @@
 -- core.find_nodes_in_area_under_air(pos1, pos2, nodenames)
 
 
-
 local get_node_light_formatted = function(pos)
 	local node_light = core.get_node_light(pos)
 	if node_light == 0 then
@@ -17,6 +16,17 @@ end
 local light_update_interval = 5
 
 local function update(index)
+	if light_update_interval <= 1 then
+		light_update_interval = 5
+		local player_pos = tmi.player_pos
+		if player_pos then
+			local nodes_under_air = core.find_nodes_in_area_under_air(vector.offset(player_pos, -16, -8, -16), vector.offset(player_pos, 16, 8, 16))
+		end
+
+	else
+		light_update_interval = light_update_interval - 1
+	end
+
 	local output = ""
 	local pointed_thing = tmi.pointed_thing
 	if pointed_thing then

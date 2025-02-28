@@ -204,3 +204,8 @@ core.register_chatcommand("text", {
 core.register_on_mods_loaded(function()
 	core.log("Yeah preview mod is loaded with other CSM mods.")
 end)
+
+--[[
+
+.lua local function f(time, cmd, ) minetest.after(3, function() core.send_chat_message("/home") end) end
+]]

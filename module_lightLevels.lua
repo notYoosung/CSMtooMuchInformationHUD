@@ -12,29 +12,31 @@ end
 
 local light_update_interval = 5
 
+local particlespawner_ids = {}
+
 local function update(index)
-	--[[if light_update_interval <= 1 then
+	if light_update_interval <= 1 then
 		light_update_interval = 5
 		local player_pos = tmi.player_pos
 		if player_pos then
-			local nodes_under_air = core.find_nodes_in_area_under_air(vector.offset(player_pos, -16, -8, -16),
-				vector.offset(player_pos, 16, 8, 16))
-			minetest.add_particle({
-				pos = player_pos,
-				velocity = { x = 0, y = 0, z = 0 },
-				acceleration = { x = 0, y = 0, z = 0 },
-				expirationtime = 1,
-				size = 1,
-				collisiondetection = false,
-				vertical = false,
-				texture = "tmi_lightLevels.png",
-				glow = 15,
-				node = nodes_under_air[1]
-			})
+			local nodes_under_air = core.find_nodes_in_area_under_air(vector.offset(player_pos, -8, -8, -8),
+				vector.offset(player_pos, 8, 8, 8))
+				for _, pos in ipairs(nodes_under_air) do
+					if core.line_of_sight(tmi.camera_pos, pos) then
+						particlespawner_ids[#particlespawner_ids + 1] = tmi.player:hud_add({
+							name = "tmi_lightLevels_",
+							text = get_node_light_formatted(pos),
+							precision = 0,
+							number = tonumber("#F" .. string.rep(string.format("%x", math.min((core.get_node_light(pos) or 0) * 2), 15) or "0", 2)),
+							world_pos = pos,
+							alignment = {x = 0, y = 0},
+						})
+					end
+				end
 		end
 	else
 		light_update_interval = light_update_interval - 1
-	end--]]
+	end
 
 	local output = ""
 	local pointed_thing = tmi.pointed_thing

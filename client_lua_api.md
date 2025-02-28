@@ -1106,7 +1106,7 @@ As documented in `lua_api.md`, except for obvious reasons, the `playername` fiel
 As documented in `lua_api.md`, except for obvious reasons, the `playername` field is not supported.
 
 
-#### List of particlespawner properties
+#### List of particlespawner properties / particlespawner definitions
 
 All properties in this list of type "vec3 range", "float range" or "vec3" can
 be animated with `*_tween` tables. For example, `jitter` can be tweened by

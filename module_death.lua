@@ -1,0 +1,5 @@
+--last death pos; time
+--cause?
+--chat msg
+--log?
+--wp?

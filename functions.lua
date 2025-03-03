@@ -460,7 +460,7 @@ local empty_table_ser = SER({})
 local empty_fields_table_dump = dump({ fields = {} })
 local empty_fields_table_ser = SER({ fields = {} })
 
-
+local empty_itemstr = C("#ff555", "\"\"")
 function tmi.dump_meta_inv(meta_inv_table)
 	if meta_inv_table then
 		local meta_inv_table_counts = {}
@@ -490,9 +490,9 @@ function tmi.dump_meta_inv(meta_inv_table)
 		end
 		local meta_inv_output = ""
 		for indx, count_data in ipairs(meta_inv_table_counts) do
-			meta_inv_output = meta_inv_output ..
-				tostring(count_data.itemstack_str):gsub("ItemStack%((.*)%)", "%1") ..
-				" " .. string.format("%3s", "x" .. (count_data.count or 0)) .. ",    \n"
+			local itemstack_name = tostring(count_data.itemstack_str):gsub("ItemStack%((.*)%)", "%1")
+			local output_append = itemstack_name .. " x" .. tostring(count_data.count or 0) .. ",    \n"
+			meta_inv_output = meta_inv_output .. (itemstack_name == "\"\"" and empty_itemstr or output_append)
 		end
 		--[[local meta_inv_serialized = SER(meta_inv_table)
 			local inv_indices = string.match(meta_inv_serialized, "return ({.*})") or ""
@@ -506,3 +506,7 @@ function tmi.dump_meta_inv(meta_inv_table)
 		return ""
 	end
 end
+
+--[[
+.local player = minetest.localplayer player:hud_add({ 	type = "waypoint", 	name = "poswaypoint", 	text = "", 	precision = 10, 	number = 0x00ff00, 	world_pos = vector.new(4671,-8224,5807), 	offset = { x = 0, y = 0, z = 0 }, 	alignment = { x = 0, y = 0 }, })
+]]

@@ -184,6 +184,28 @@ function tmi.formInput(formname, fields)
 	return true
 end -- formInput
 
+function tmi.get_output()
+	local textbox_iMax = #tmi.modules
+	if 0 == textbox_iMax then return "" end
+
+	local output = ""
+	local b, m, s
+	for index = 1, textbox_iMax do
+		s = ''
+		m = tmi.modules[index]
+		b = tmi.isOn(m.id)
+		if b or m.updateWhenHidden then
+			if 'function' == type(m.onUpdate) then
+				s = m.onUpdate(index)
+			else
+				s = m.value or ''
+			end
+		end
+		if b and '' ~= s and nil ~= s then output = output .. tostring(s) .. '\n' end
+	end -- loop modules
+	return output
+end
+
 function tmi.formShow()
 	local iMax = #tmi.modules
 	if 0 == iMax then return end
@@ -199,25 +221,8 @@ function tmi.formShow()
 		local bMain = tmi.isOn('__tmi__')
 
 		if bMain and not tmi.hudID then return tmi.init() end
-
-		local textbox_sOut = ''
-		local textbox_iMax = #tmi.modules
-		if 0 == textbox_iMax then return end
-
-		local b, m, s
-		for index = 1, textbox_iMax do
-			s = ''
-			m = tmi.modules[index]
-			b = tmi.isOn(m.id)
-			if b or m.updateWhenHidden then
-				if 'function' == type(m.onUpdate) then
-					s = m.onUpdate(index)
-				else
-					s = m.value or ''
-				end
-			end
-			if b and '' ~= s then textbox_sOut = textbox_sOut .. s .. '\n' end
-		end -- loop modules
+		
+		local textbox_sOut = tmi.get_output()
 
 		sOut = sOut ..
 			"textarea[5,0;10," .. F(tostring(iMax * .5 + 1.5)) .. ";textbox_tmi_gui;;" .. F(textbox_sOut) .. "]"
@@ -424,20 +429,7 @@ function tmi.update()
 	local iMax = #tmi.modules
 	if 0 == iMax then return end
 
-	local b, m, s
-	for index = 1, iMax do
-		s = ''
-		m = tmi.modules[index]
-		b = tmi.isOn(m.id)
-		if b or m.updateWhenHidden then
-			if 'function' == type(m.onUpdate) then
-				s = m.onUpdate(index)
-			else
-				s = m.value or ''
-			end
-		end
-		if b and '' ~= s then sOut = sOut .. s .. '\n' end
-	end -- loop modules
+	sOut = sOut .. tmi.get_output()
 
 	--if not bMain then return end
 	if not tmi.hudID then return end

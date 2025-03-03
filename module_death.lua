@@ -4,8 +4,12 @@
 --log?
 --wp?
 core.register_on_death(function()
+    core.log("error", "died")
+    core.display_chat_message("died")
     if tmi.player_pos then
-        core.log("error", core.colorize("#E00000",  "You died at " .. core.pos_to_string(tmi.player_pos) .. "."))
+        local death_msg = core.colorize("#E00000",  "You died at " .. core.pos_to_string(tmi.player_pos) .. ".")
+        core.log("error", death_msg)
+        core.display_chat_message(death_msg)
         tmi.last_death_pos = tmi.player_pos
     end
 end)

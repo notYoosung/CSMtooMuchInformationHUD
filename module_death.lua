@@ -11,6 +11,18 @@ core.register_on_death(function()
         core.log("error", death_msg)
         core.display_chat_message(death_msg)
         tmi.last_death_pos = tmi.player_pos
+        if tmi.player then
+            tmi.player:hud_add({
+                type = "waypoint",
+                name = "death",
+                text = "",
+                precision = 10,
+                number = 0x00ff00,
+                world_pos = tmi.player_pos,
+                offset = { x = 0, y = 0, z = 0 },
+                alignment = { x = 0, y = 0 },
+            })
+        end
     end
 end)
 

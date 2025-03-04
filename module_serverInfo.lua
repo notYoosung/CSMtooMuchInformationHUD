@@ -9,7 +9,9 @@ local function init(index)
 	local rs = restrictionString
 
 	local tCSM = core.get_csm_restrictions()
+	tmi.csm_restrictions = tCSM
 	local oSI = core.get_server_info()
+	tmi.server_info = oSI
 	local sLocal, sLanguage = core.get_language()
 	local sOut = oSI.address .. '/' .. oSI.ip .. ':' .. oSI.port
 		.. 'v' .. oSI.protocol_version .. '-' .. sLocal .. '/' .. sLanguage

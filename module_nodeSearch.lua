@@ -6,11 +6,14 @@ local function update()
     if update_counter >= update_interval then
         update_counter = 1
     else
+        local output = ""
+
         update counter = update_counter + 1
         local player_pos = tmi.player_pos
         if tmi.csm_restrictions.lookup_nodes and player_pos then
             local find_names = tmi.store:get_string("tmi:nodeSearch_find_names")
-            
+            local found_names = {}
+
             local nodes = {}
 
             local pos_min = vector.subtract(player_pos, bound)
@@ -20,11 +23,28 @@ local function update()
                     for z = pos_min.z, pos_max.z do
                         local node = core.get_node_or_nil({x = x, y = y, z = z})
                         -- {name="node_name", param1=0, param2=0}
-                        nodes[x .. "," .. y .. "," .. z] = node
+                        if node then
+                            local nname = node.name
+                            for _, find_name in ipairs(find_names) do
+                                if nname == find_name or string.gsub(nname, "^-*:") == find_name then
+                                    found_names[nname]
+                            end
+
+                            if node.name then
+                                find[names]
+                            end
+                            nodes[x .. "," .. y .. "," .. z] = node
+                        end
                     end
                 end
             end
         end
+
+        for name, pos in pairs(found_names) do
+            output = output .. "\n" .. tostring(name) .. " x" .. (#pos or 0) .. "    "
+        end
+
+        return output
     end
 end
 

@@ -8,7 +8,7 @@ local function update()
     else
         local output = ""
 
-        update counter = update_counter + 1
+        update_counter = update_counter + 1
         local player_pos = tmi.player_pos
         if tmi.csm_restrictions.lookup_nodes and player_pos then
             local find_names = tmi.store:get_string("tmi:nodeSearch_find_names")
@@ -25,24 +25,23 @@ local function update()
                         -- {name="node_name", param1=0, param2=0}
                         if node then
                             local nname = node.name
-                            for _, find_name in ipairs(find_names) do
-                                if nname == find_name or string.gsub(nname, "^-*:") == find_name then
-                                    found_names[nname]
+                            for _, find_name in ipairs(string.split(find_names, ",%s-", true, 2048, true)) do
+                                if nname == find_name or string.gsub(nname, "^-*:(.*)", "%1") == find_name then
+                                    found_names[find_name] = (found_names[find_name] or 0) + 1
+                                end
                             end
 
-                            if node.name then
-                                find[names]
-                            end
                             nodes[x .. "," .. y .. "," .. z] = node
                         end
                     end
                 end
             end
+
+            for name, pos in pairs(found_names) do
+                output = output .. "\n" .. tostring(name) .. " x" .. (#pos or 0) .. "    "
+            end
         end
 
-        for name, pos in pairs(found_names) do
-            output = output .. "\n" .. tostring(name) .. " x" .. (#pos or 0) .. "    "
-        end
 
         return output
     end

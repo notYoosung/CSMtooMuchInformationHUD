@@ -500,5 +500,5 @@ function tmi.dump_meta_inv(meta_inv_table)
 end
 
 --[[
-.local player = minetest.localplayer player:hud_add({ 	type = "waypoint", 	name = "poswaypoint", 	text = "", 	precision = 10, 	number = 0x00ff00, 	world_pos = vector.new(4671,-8224,5807), 	offset = { x = 0, y = 0, z = 0 }, 	alignment = { x = 0, y = 0 }, })
+.lua local player = minetest.localplayer player:hud_add({ 	type = "waypoint", 	name = "poswaypoint", 	text = "", 	precision = 10, 	number = 0x00ff00, 	world_pos = vector.new(4619,-8422,5742), 	offset = { x = 0, y = 0, z = 0 }, 	alignment = { x = 0, y = 0 }, })
 ]]

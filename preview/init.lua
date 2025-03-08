@@ -207,5 +207,5 @@ end)
 
 --[[
 
-.lua local function f(time, cmd, ) minetest.after(3, function() core.send_chat_message("/home") end) end
+.lua function f(time, type) minetest.after(time, function() if minetest.localplayer:get_control().aux1 then core.send_chat_message("/" .. (type and "home" or "home2")) f(time, not type) end end) end
 ]]

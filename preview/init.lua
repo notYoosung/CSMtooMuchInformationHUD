@@ -209,3 +209,15 @@ end)
 
 .lua function f(time, type) minetest.after(time, function() if minetest.localplayer:get_control().aux1 then core.send_chat_message("/" .. (type and "home" or "home2")) f(time, not type) end end) end
 ]]
+
+--[[
+local function get_hotbar_bg(x,y)
+	local out = ""
+	for i=0,7,1 do
+		out = out .."image["..x+i..","..y..";1,1;gui_hb_bg.png]"
+	end
+	return out
+end
+local fs = "size[8,9]list[current_player;enderchest;0,0;8,4;]list[current_player;main;0,5;8,4;]listring[current_player;enderchest]listring[current_player;main]" .. get_hotbar_bg(0,5)
+core.show_formspec("enderchest", fs)
+]]

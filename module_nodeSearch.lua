@@ -1,23 +1,31 @@
-local bound = vector.new(8, 8, 8)
+local bound = vector.new(16, 8, 16)
 
+local tmi_interval = tmi.conf.interval
 local update_interval = 5
 local update_counter = 5
+local prev_player_pos = nil
+
+local meta_inv_wps = {}
+
+-- local player_pos_equals_prev
+-- local prev_find_nodes_with_meta
 local function update()
     if update_counter >= update_interval then
         update_counter = 1
     else
+        update_counter = update_counter + 1
         local output = ""
 
-        update_counter = update_counter + 1
         local player_pos = tmi.player_pos
-        if tmi.csm_restrictions.lookup_nodes and player_pos then
+        player_pos_equals_prev = prev_player_pos and vector.equals(vector.round(prev_player_pos), vector.round(player_pos))
+        if --[[tmi.csm_restrictions.lookup_nodes and]] player_pos then
+            local pos_min = vector.subtract(player_pos, bound)
+            local pos_max = vector.add(player_pos, bound)
             --[[local find_names = tmi.store:get_string("tmi:nodeSearch_find_names")
             local found_names = {}
 
             local nodes = {}
 
-            local pos_min = vector.subtract(player_pos, bound)
-            local pos_max = vector.add(player_pos, bound)
             for x = pos_min.x, pos_max.x do
                 for y = pos_min.y, pos_max.y do
                     for z = pos_min.z, pos_max.z do
@@ -43,8 +51,13 @@ local function update()
 
 
 
-
-            local meta_nodes = core.find_nodes_with_meta(pos_min, pos_max)
+            
+            local meta_nodes
+            -- if player_pos_equals_prev and prev_find_nodes_with_meta then
+            --     meta_nodes = prev_find_nodes_with_meta
+            -- else
+                meta_nodes = core.find_nodes_with_meta(pos_min, pos_max)
+            -- end
             if meta_nodes then
                 for k, node_pos in pairs(meta_nodes) do
                     local node_meta = core.get_meta(node_pos)
@@ -73,19 +86,24 @@ local function update()
                                 if itemstring then
                                     local itemdef = core.get_item_def(itemstring)
                                     if itemdef then
-                                        minetest.add_particle({
-                                            pos = vector.offset(node_pos, 0, 0.75, 0),
-                                            velocity = { x = 0, y = 0, z = 0 },
-                                            acceleration = { x = 0, y = 0, z = 0 },
-                                            expirationtime = update_interval * tmi.interval,
-                                            size = 7.5,
-                                            collisiondetection = false,
-                                            collision_removal = false,
-                                            object_collision = false,
-                                            vertical = not false,
-                                            texture = itemdef.inventory_image,
-                                            glow = 14,
-                                        })
+                                        local texture = (itemdef.inventory_image ~= "" and itemdef.inventory_image) or (itemdef.wield_image ~= "" and itemdef.wield_image)
+                                        if texture then
+                                            minetest.add_particle({
+                                                pos = vector.offset(node_pos, 0, 0.75, 0),
+                                                velocity = { x = 0, y = 0, z = 0 },
+                                                acceleration = { x = 0, y = 0, z = 0 },
+                                                expirationtime = update_interval * tmi_interval,
+                                                size = 7.5,
+                                                collisiondetection = false,
+                                                collision_removal = false,
+                                                object_collision = false,
+                                                vertical = not false,
+                                                texture = texture,
+                                                glow = 14,
+                                            })
+                                        else
+
+                                        end
                                     end
                                 end
                             end
@@ -93,8 +111,9 @@ local function update()
                     end
                 end
             end
+            -- prev_find_nodes_with_meta = meta_nodes
+            -- prev_player_pos = player_pos
         end
-
 
 
         return output

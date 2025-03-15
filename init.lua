@@ -56,6 +56,8 @@ dofile(p .. 'serverInfo.lua')       -- server ip, protocol version etc.
 --
 dofile(p .. 'wieldedItem.lua')      -- description, wear and other info about wielded item
 --
+dofile(p .. 'nodeSearch.lua')      -- 
+--
 dofile(p .. 'death.lua')      -- 
 --
 dofile(p .. 'lightLevels.lua')      -- light levels of pointed above/under and player pos

@@ -1069,7 +1069,7 @@ Used by `core.add_particle`.
     animation = {Tile Animation definition},
     -- Optional, specifies how to animate the particle texture
 
-    glow = 0
+    glow = 0,
     -- Optional, specify particle self-luminescence in darkness.
     -- Values 0-14.
 

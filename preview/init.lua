@@ -221,4 +221,7 @@ local function get_hotbar_bg(x,y)
 end
 local fs = "size[8,9]list[current_player;enderchest;0,0;8,4;]list[current_player;main;0,5;8,4;]listring[current_player;enderchest]listring[current_player;main]"w .. get_hotbar_bg(0,5)
 core.show_formspec("enderchest", fs)
+
+.lua local p = vector.new(17857,-47,-1378) local nm = core.get_meta(p):to_table() local inv = nm.inventory.main local name = nil for k, item in pairs(inv) do local item_name = item:get_name() if item_name ~= "" then if name == nil then name = item_name elseif name ~= nil and name ~= "" and name ~= item_name then name = "n" .. item_name break end end end local itemstring = name local itemdef = core.get_item_def(itemstring)minetest.add_particlespawner({amount = 1,time = 1,pos = vector.offset(p, 0, 0.75, 0),expirationtime = 1,size=10, texture = {name = itemdef.inventory_image}})
+local itemstring = "mcl_core:apple" local itemdef = core.get_item_def(itemstring)  minetest.add_particlespawner({ 	amount = 1, 	time = 1, 	pos = p, 	exptime = 1, 	texture = { 		name = itemdef.inventory_image 	} })
 ]]

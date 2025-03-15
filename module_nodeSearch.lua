@@ -11,7 +11,7 @@ local function update()
         update_counter = update_counter + 1
         local player_pos = tmi.player_pos
         if tmi.csm_restrictions.lookup_nodes and player_pos then
-            local find_names = tmi.store:get_string("tmi:nodeSearch_find_names")
+            --[[local find_names = tmi.store:get_string("tmi:nodeSearch_find_names")
             local found_names = {}
 
             local nodes = {}
@@ -21,7 +21,7 @@ local function update()
             for x = pos_min.x, pos_max.x do
                 for y = pos_min.y, pos_max.y do
                     for z = pos_min.z, pos_max.z do
-                        local node = core.get_node_or_nil({x = x, y = y, z = z})
+                        local node = core.get_node_or_nil({ x = x, y = y, z = z })
                         -- {name="node_name", param1=0, param2=0}
                         if node then
                             local nname = node.name
@@ -39,8 +39,62 @@ local function update()
 
             for name, pos in pairs(found_names) do
                 output = output .. "\n" .. tostring(name) .. " x" .. (#pos or 0) .. "    "
+            end]]
+
+
+
+
+            local meta_nodes = core.find_nodes_with_meta(pos_min, pos_max)
+            if meta_nodes then
+                for k, node_pos in pairs(meta_nodes) do
+                    local node_meta = core.get_meta(node_pos)
+                    if node_meta then
+                        local nm = node_meta:to_table()
+                        if nm then
+                            local inv
+                            if nm.inventory then
+                                if nm.inventory.main then
+                                    inv = nm.inventory.main
+                                end
+                            end
+                            if inv then
+                                local itemstring = nil
+                                for _, item in pairs(inv) do
+                                    local item_name = item:get_name()
+                                    if item_name ~= "" then
+                                        if itemstring == nil then
+                                            itemstring = item_name
+                                        elseif itemstring ~= nil and itemstring ~= item_name then
+                                            itemstring = nil
+                                            break
+                                        end
+                                    end
+                                end
+                                if itemstring then
+                                    local itemdef = core.get_item_def(itemstring)
+                                    if itemdef then
+                                        minetest.add_particle({
+                                            pos = vector.offset(node_pos, 0, 0.75, 0),
+                                            velocity = { x = 0, y = 0, z = 0 },
+                                            acceleration = { x = 0, y = 0, z = 0 },
+                                            expirationtime = update_interval * tmi.interval,
+                                            size = 7.5,
+                                            collisiondetection = false,
+                                            collision_removal = false,
+                                            object_collision = false,
+                                            vertical = not false,
+                                            texture = itemdef.inventory_image,
+                                            glow = 14,
+                                        })
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
             end
         end
+
 
 
         return output
@@ -49,8 +103,8 @@ end
 
 
 tmi.addModule({
-	id = 'nodeSearch',
-	title = 'nodeSearch',
-	value = 'nodeSearch',
-	onUpdate = update,
+    id = 'nodeSearch',
+    title = 'nodeSearch',
+    value = 'nodeSearch',
+    onUpdate = update,
 })

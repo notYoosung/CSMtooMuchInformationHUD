@@ -91,8 +91,9 @@ local function update()
                                 end
                                 if itemstring then
                                     local itemdef = core.get_item_def(itemstring)
+                                    local texture, label
                                     if itemdef then
-                                        local texture = (itemdef.inventory_image ~= "" and itemdef.inventory_image) or
+                                        texture = (itemdef.inventory_image ~= "" and itemdef.inventory_image) or
                                             (itemdef.wield_image ~= "" and itemdef.wield_image)
                                         if texture then
                                             minetest.add_particle({
@@ -108,24 +109,24 @@ local function update()
                                                 texture = texture,
                                                 glow = 14,
                                             })
-                                        else
-                                            local item_desc = itemdef.description
-                                            if item_desc then
-                                                local n_above = core.get_node_or_nil(vector.offset(node_pos, 0, 1, 0))
-                                                local n_above_def = n_above and n_above.name and core.get_node_def(n_above.name)
-                                                if not n_above_def or (n_above_def and (n_above_def.sunlight_propogates or n_above_def.walkable == false)) then
-                                                    local display_text = string.gsub(item_desc, "^(.-)\n.*", "%1")
-                                                    meta_inv_wps[#meta_inv_wps + 1] = tmi.player:hud_add({
-                                                        hud_elem_type = "waypoint",
-                                                        name = display_text,--"node_meta_inv_itemname_wp",
-                                                        world_pos = vector.offset(node_pos, 0, 0.75, 0),
-                                                        text = "",
-                                                        number = 0xffffaa,
-                                                        precision = 0,
-                                                        size = 10,
-                                                    })
-                                                end
-                                            end
+                                        end
+                                    end
+                                    label = (not texture and itemdef and itemdef.description) or nm.name
+                                    if label then
+                                        local n_above = core.get_node_or_nil(vector.offset(node_pos, 0, 1, 0))
+                                        local n_above_def = n_above and n_above.name and
+                                        core.get_node_def(n_above.name)
+                                        if not n_above_def or (n_above_def and (n_above_def.sunlight_propogates or n_above_def.walkable == false)) then
+                                            local display_text = string.gsub(label, "^(.-)\n.*", "%1")
+                                            meta_inv_wps[#meta_inv_wps + 1] = tmi.player:hud_add({
+                                                hud_elem_type = "waypoint",
+                                                name = display_text,     --"node_meta_inv_itemname_wp",
+                                                world_pos = vector.offset(node_pos, 0, 0.75, 0),
+                                                text = "",
+                                                number = 0xffffaa,
+                                                precision = 0,
+                                                size = 10,
+                                            })
                                         end
                                     end
                                 end

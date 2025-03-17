@@ -1,8 +1,8 @@
 local bound = vector.new(10, 6, 10)
 
 local tmi_interval = tmi.conf.interval
-local update_interval = 10
-local update_counter = 10
+local update_counter_interval = 3
+local update_counter = 0
 local prev_player_pos = nil
 
 local meta_inv_wps = {}
@@ -10,10 +10,10 @@ local meta_inv_wps = {}
 -- local player_pos_equals_prev
 -- local prev_find_nodes_with_meta
 local function update()
-    if update_counter < update_interval then
-        update_counter = update_counter + 1
+    if update_counter > 1 then
+        update_counter = update_counter - 1
     else
-        update_counter = 0
+        update_counter = update_counter_interval
         local output = ""
 
 
@@ -100,7 +100,7 @@ local function update()
                                                 pos = vector.offset(node_pos, 0, 0.75, 0),
                                                 velocity = { x = 0, y = 0, z = 0 },
                                                 acceleration = { x = 0, y = 0, z = 0 },
-                                                expirationtime = update_interval * tmi_interval,
+                                                expirationtime = (update_counter_interval + 0.5) * tmi_interval,
                                                 size = 7.5,
                                                 collisiondetection = false,
                                                 collision_removal = false,
@@ -114,13 +114,12 @@ local function update()
                                     label = (not texture and itemdef and itemdef.description) or nm.name
                                     if label then
                                         local n_above = core.get_node_or_nil(vector.offset(node_pos, 0, 1, 0))
-                                        local n_above_def = n_above and n_above.name and
-                                        core.get_node_def(n_above.name)
+                                        local n_above_def = n_above and n_above.name and core.get_node_def(n_above.name)
                                         if not n_above_def or (n_above_def and (n_above_def.sunlight_propogates or n_above_def.walkable == false)) then
                                             local display_text = string.gsub(label, "^(.-)\n.*", "%1")
                                             meta_inv_wps[#meta_inv_wps + 1] = tmi.player:hud_add({
                                                 hud_elem_type = "waypoint",
-                                                name = display_text,     --"node_meta_inv_itemname_wp",
+                                                name = display_text, --"node_meta_inv_itemname_wp",
                                                 world_pos = vector.offset(node_pos, 0, 0.75, 0),
                                                 text = "",
                                                 number = 0xffffaa,

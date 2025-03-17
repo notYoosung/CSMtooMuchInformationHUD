@@ -12,7 +12,37 @@ local meta_inv_wps = {}
 -- local prev_find_nodes_with_meta
 
 local function init()
-    tmi.store:set_string("tmi:nodeSearch_node_names", "mcl_core:stone_with_coal")
+    tmi.store:set_string("tmi:nodeSearch_node_names", "mcl_core:stone_with_iron")
+
+    -- chatcommand to add or remove an itemstring in the node search list
+    core.register_chatcommand("ns", {
+        params = "<add/remove> <itemstring>",
+        description = "Add or remove itemstring in node search list.",
+        func = function(param)
+            local node_names = tmi.store:get_string("tmi:nodeSearch_node_names")
+            local subcmds = string.split(param, "[%s,]+", false)
+            if node_names and node_names ~= "" then
+                local node_names_table = string.split(node_names, ",")
+                if subcmds[1] and subcmds[2] then
+                    if subcmds[1] == "add" then
+                        if table.indexof(node_names_table, subcmds[2]) == -1 then
+                            node_names_table[#node_names_table + 1] = subcmds[2]
+                            return "Itemstring added to node search list."
+                        else
+                            return false, "Itemstring already in node search list."
+                        end
+                    elseif subcmds[1] == "remove" then
+                        local index_of = table.indexof(node_names_table, subcmds[2])
+                        if index_of ~= -1 then
+                            node_names_table[index_of] = nil
+                            return true, "Itemstring removed from node search list."
+                        end
+                    end
+                end
+                tmi.store:set_string("tmi:nodeSearch_node_names", table.concat(node_names_table, ","))
+            end
+        end,
+    })
 end
 
 local function update()
@@ -49,7 +79,7 @@ local function update()
                     for __, pos in ipairs(positions) do
                         meta_inv_wps[#meta_inv_wps + 1] = tmi.player:hud_add({
                             hud_elem_type = "waypoint",
-                            name = "·",
+                            name = "•",
                             world_pos = pos,
                             text = "",
                             number = 0xffffaa,

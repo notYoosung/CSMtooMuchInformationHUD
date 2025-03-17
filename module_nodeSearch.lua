@@ -1,4 +1,4 @@
-local bound = vector.new(16, 8, 16)
+local bound = vector.new(10, 6, 10)
 
 local tmi_interval = tmi.conf.interval
 local update_interval = 10

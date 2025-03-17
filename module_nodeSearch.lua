@@ -13,7 +13,7 @@ local function update()
     if update_counter < update_interval then
         update_counter = update_counter + 1
     else
-        update_counter = 1
+        update_counter = 0
         local output = ""
 
 

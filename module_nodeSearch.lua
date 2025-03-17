@@ -10,10 +10,10 @@ local meta_inv_wps = {}
 -- local player_pos_equals_prev
 -- local prev_find_nodes_with_meta
 local function update()
-    if update_counter >= update_interval then
-        update_counter = 1
-    else
+    if update_counter < update_interval then
         update_counter = update_counter + 1
+    else
+        update_counter = 1
         local output = ""
 
 

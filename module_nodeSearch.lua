@@ -79,7 +79,7 @@ local function update()
                     for __, pos in ipairs(positions) do
                         meta_inv_wps[#meta_inv_wps + 1] = tmi.player:hud_add({
                             hud_elem_type = "waypoint",
-                            name = "•",
+                            name = "•", -- •○◦⦾⦿¤·■⌂☼▼◘◙⁃
                             world_pos = pos,
                             text = "",
                             number = 0xffffaa,

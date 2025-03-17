@@ -5,10 +5,16 @@ local update_counter_interval = 3
 local update_counter = 0
 local prev_player_pos = nil
 
+local node_search_wps = {}
 local meta_inv_wps = {}
 
 -- local player_pos_equals_prev
 -- local prev_find_nodes_with_meta
+
+local function init()
+    tmi.store:set_string("tmi:nodeSearch_node_names", "mcl_core:stone_with_coal")
+end
+
 local function update()
     if update_counter > 1 then
         update_counter = update_counter - 1
@@ -17,8 +23,13 @@ local function update()
         local output = ""
 
 
+        for k, v in ipairs(node_search_wps) do
+            tmi.player:hud_remove(v)
+            node_search_wps[k] = nil
+        end
         for k, v in ipairs(meta_inv_wps) do
             tmi.player:hud_remove(v)
+            meta_inv_wps[k] = nil
         end
 
         local player_pos = tmi.player_pos
@@ -27,34 +38,29 @@ local function update()
         if --[[tmi.csm_restrictions.lookup_nodes and]] player_pos then
             local pos_min = vector.subtract(player_pos, bound)
             local pos_max = vector.add(player_pos, bound)
-            --[[local find_names = tmi.store:get_string("tmi:nodeSearch_find_names")
-            local found_names = {}
+            local node_names = tmi.store:get_string("tmi:nodeSearch_node_names")
 
-            local nodes = {}
+            if node_names and node_names ~= "" then
+                local node_names_table = string.split(node_names, ",")
+                local nodes_in_area = core.find_nodes_in_area(pos_min, pos_max, node_names_table, true)
 
-            for x = pos_min.x, pos_max.x do
-                for y = pos_min.y, pos_max.y do
-                    for z = pos_min.z, pos_max.z do
-                        local node = core.get_node_or_nil({ x = x, y = y, z = z })
-                        -- {name="node_name", param1=0, param2=0}
-                        if node then
-                            local nname = node.name
-                            for _, find_name in ipairs(string.split(find_names, ",%s-", true, 2048, true)) do
-                                if nname == find_name or string.gsub(nname, "^-*:(.*)", "%1") == find_name then
-                                    found_names[find_name] = (found_names[find_name] or 0) + 1
-                                end
-                            end
 
-                            nodes[x .. "," .. y .. "," .. z] = node
-                        end
+                for name, positions in pairs(nodes_in_area) do
+                    for __, pos in ipairs(positions) do
+                        meta_inv_wps[#meta_inv_wps + 1] = tmi.player:hud_add({
+                            hud_elem_type = "waypoint",
+                            name = "·",
+                            world_pos = pos,
+                            text = "",
+                            number = 0xffffaa,
+                            precision = 0,
+                            size = 10,
+                        })
                     end
+
+                    output = output .. "\n" .. tostring(name) .. " x" .. (#positions or 0) .. "    "
                 end
             end
-
-            for name, pos in pairs(found_names) do
-                output = output .. "\n" .. tostring(name) .. " x" .. (#pos or 0) .. "    "
-            end]]
-
 
 
 
@@ -148,5 +154,6 @@ tmi.addModule({
     id = 'nodeSearch',
     title = 'nodeSearch',
     value = 'nodeSearch',
+    onInit = init,
     onUpdate = update,
 })

@@ -11,6 +11,7 @@ local meta_inv_wps = {}
 -- local player_pos_equals_prev
 -- local prev_find_nodes_with_meta
 
+local mod_storage = core.get_mod_storage()
 local function init()
     tmi.store:set_string("tmi:nodeSearch_node_names", "mcl_core:stone_with_iron")
 
@@ -24,7 +25,7 @@ local function init()
             if node_names --[[and node_names ~= ""]] then
                 local node_names_table = string.split(node_names, ",")
                 core.display_chat_message(dump(node_names_table))
-                core.display_chat_message(dump(subcmds))
+                -- core.display_chat_message(dump(subcmds))
                 if subcmds[1] and subcmds[2] then
                     if subcmds[1] == "add" then
                         core.display_chat_message("Adding: " .. tostring(subcmds[2]))
@@ -44,6 +45,9 @@ local function init()
                     end
                 end
                 tmi.store:set_string("tmi:nodeSearch_node_names", table.concat(node_names_table, ","))
+                if mod_storage then
+                    mod_storage:set_string("tmi:nodeSearch_node_names", table.concat(node_names_table, ","))
+                end
             end
         end,
     })
@@ -86,7 +90,7 @@ local function update()
                             name = "•", -- •○◦⦾⦿¤·■⌂☼▼◘◙⁃      ⌖𖥠𐀏⊹₊𖣓𖣨⊹𖣠☩     ✦✧✩✪✫✬✭✮✯✰✱✲✳✴✵✶✷✸✹✺✻✼✽✾✿❀❁❂❃❄❅❆❇❈❉❊❋❌❍❎❏❐
                             world_pos = pos,
                             text = "",
-                            number = 0xffffaa,
+                            number = 0xdc143c,
                             precision = 0,
                             size = 10,
                         })

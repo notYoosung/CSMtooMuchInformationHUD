@@ -20,22 +20,26 @@ local function init()
         description = "Add or remove itemstring in node search list.",
         func = function(param)
             local node_names = tmi.store:get_string("tmi:nodeSearch_node_names")
-            local subcmds = string.split(param, "[%s,]+", false)
-            if node_names and node_names ~= "" then
+            local subcmds = string.split(param, " +", false, 1024, true)
+            if node_names --[[and node_names ~= ""]] then
                 local node_names_table = string.split(node_names, ",")
+                core.display_chat_message(dump(node_names_table))
+                core.display_chat_message(dump(subcmds))
                 if subcmds[1] and subcmds[2] then
                     if subcmds[1] == "add" then
+                        core.display_chat_message("Adding: " .. tostring(subcmds[2]))
                         if table.indexof(node_names_table, subcmds[2]) == -1 then
                             node_names_table[#node_names_table + 1] = subcmds[2]
-                            return "Itemstring added to node search list."
+                            core.display_chat_message("Itemstring added to node search list.")
                         else
-                            return false, "Itemstring already in node search list."
+                            core.display_chat_message("Itemstring already in node search list.")
                         end
                     elseif subcmds[1] == "remove" then
+                        core.display_chat_message("Removing: " .. tostring(subcmds[2]))
                         local index_of = table.indexof(node_names_table, subcmds[2])
                         if index_of ~= -1 then
                             node_names_table[index_of] = nil
-                            return true, "Itemstring removed from node search list."
+                            core.display_chat_message("Itemstring removed from node search list.")
                         end
                     end
                 end

@@ -11,43 +11,62 @@ local meta_inv_wps = {}
 -- local player_pos_equals_prev
 -- local prev_find_nodes_with_meta
 
-local mod_storage = core.get_mod_storage()
+local node_table = {
+    "default:stone_with_diamond",
+    "default:mese",
+    "moreores:mineral_mithril"
+}
+
+local ns_store_id = "tmi:nodeSearch_node_names"
+local ret = ""
 local function init()
-    tmi.store:set_string("tmi:nodeSearch_node_names", "mcl_core:stone_with_iron")
+    local nn = tmi.store:get_string(ns_store_id)
+    if not nn or (nn and nn == "") then
+        tmi.store:set_string(ns_store_id, table.concat(node_table, ","))
+    end
 
     -- chatcommand to add or remove an itemstring in the node search list
     core.register_chatcommand("ns", {
         params = "<add/remove> <itemstring>",
         description = "Add or remove itemstring in node search list.",
         func = function(param)
-            local node_names = tmi.store:get_string("tmi:nodeSearch_node_names")
+            local node_names = tmi.store:get_string(ns_store_id)
             local subcmds = string.split(param, " +", false, 1024, true)
             if node_names --[[and node_names ~= ""]] then
                 local node_names_table = string.split(node_names, ",")
-                core.display_chat_message(dump(node_names_table))
                 -- core.display_chat_message(dump(subcmds))
-                if subcmds[1] and subcmds[2] then
-                    if subcmds[1] == "add" then
-                        core.display_chat_message("Adding: " .. tostring(subcmds[2]))
-                        if table.indexof(node_names_table, subcmds[2]) == -1 then
-                            node_names_table[#node_names_table + 1] = subcmds[2]
-                            core.display_chat_message("Itemstring added to node search list.")
-                        else
-                            core.display_chat_message("Itemstring already in node search list.")
+                local sc1 = subcmds[1]
+                local sc2 = subcmds[2]
+                if sc1 then
+                    if sc2 == nil then
+                        local pointed = tmi.pointed_thing
+                        if pointed and pointed.type == "node" then
+                            local ndef = core.get_node_or_nil(pointed.under)
+                            if ndef then
+                                sc2 = ndef.name
+                            end
                         end
-                    elseif subcmds[1] == "remove" then
-                        core.display_chat_message("Removing: " .. tostring(subcmds[2]))
-                        local index_of = table.indexof(node_names_table, subcmds[2])
-                        if index_of ~= -1 then
-                            node_names_table[index_of] = nil
-                            core.display_chat_message("Itemstring removed from node search list.")
+                    end
+                    if sc2 then
+                        if sc1 == "add" then
+                            core.display_chat_message("Adding: " .. tostring(sc2))
+                            if table.indexof(node_names_table, sc2) == -1 then
+                                node_names_table[#node_names_table + 1] = sc2
+                                core.display_chat_message("\"" .. tostring(sc2) .. "\" added to node search list.")
+                            else
+                                core.display_chat_message("\"" .. tostring(sc2) .. "\" already in node search list.")
+                            end
+                        elseif sc1 == "remove" then
+                            local index_of = table.indexof(node_names_table, sc2)
+                            if index_of ~= -1 then
+                                table.remove(node_names_table, index_of)
+                                core.display_chat_message("\"" .. tostring(sc2) .. "\" removed from node search list.")
+                            end
                         end
                     end
                 end
-                tmi.store:set_string("tmi:nodeSearch_node_names", table.concat(node_names_table, ","))
-                if mod_storage then
-                    mod_storage:set_string("tmi:nodeSearch_node_names", table.concat(node_names_table, ","))
-                end
+                core.display_chat_message(dump(node_names_table))
+                tmi.store:set_string(ns_store_id, table.concat(node_names_table, ","))
             end
         end,
     })
@@ -183,8 +202,9 @@ local function update()
         end
 
 
-        return output
+        ret = output
     end
+    return ret
 end
 
 
@@ -195,3 +215,7 @@ tmi.addModule({
     onInit = init,
     onUpdate = update,
 })
+
+--[[
+.lua return dump(core.get_item_def(core.localplayer:get_wielded_item():get_name()))
+]]

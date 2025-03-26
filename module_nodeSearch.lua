@@ -70,6 +70,47 @@ local function init()
             end
         end,
     })
+
+
+    core.register_chatcommand("pt", {
+        params = "(<x> <y> <z>)|(<x> <z>)",
+        description = "Create a waypoint at a coordinate.",
+        func = function(param)
+            local p = tmi.player
+            if p then
+                local subcmds = string.split(param, "[, ]+", false, 1024, true)
+                local player_pos = tmi.player_pos
+                if player_pos then
+                    player_pos = vector.round(player_pos)
+                    local x, y, z
+                    if #subcmds == 3 then
+                        x = core.parse_relative_number(subcmds[1], player_pos.x)
+                        y = core.parse_relative_number(subcmds[2], player_pos.y)
+                        z = core.parse_relative_number(subcmds[3], player_pos.z)
+                    elseif #subcmds == 2 then
+                        x = core.parse_relative_number(subcmds[1], player_pos.x)
+                        y = player_pos.y
+                        z = core.parse_relative_number(subcmds[2], player_pos.z)
+                    elseif #subcmds == 0 then
+                        x = player_pos.x
+                        y = player_pos.y
+                        z = player_pos.z
+                    end
+                    if x ~= nil and y ~= nil and z ~= nil then
+                        p:hud_add({
+                            hud_elem_type = "waypoint",
+                            name = "○", --"•", -- •○◦⦾⦿¤·■⌂☼▼◘◙⁃      ⌖𖥠𐀏⊹₊𖣓𖣨⊹𖣠☩     ✦✧✩✪✫✬✭✮✯✰✱✲✳✴✵✶✷✸✹✺✻✼✽✾✿❀❁❂❃❄❅❆❇❈❉❊❋❌❍❎❏❐
+                            world_pos = vector.new(x, y, z),
+                            text = "",
+                            number = 0xdc143c,
+                            precision = 10,
+                            size = 10,
+                        })
+                    end
+                end
+            end
+        end,
+    })
 end
 
 local function update()
@@ -106,7 +147,8 @@ local function update()
                     for __, pos in ipairs(positions) do
                         meta_inv_wps[#meta_inv_wps + 1] = tmi.player:hud_add({
                             hud_elem_type = "waypoint",
-                            name = "•", -- •○◦⦾⦿¤·■⌂☼▼◘◙⁃      ⌖𖥠𐀏⊹₊𖣓𖣨⊹𖣠☩     ✦✧✩✪✫✬✭✮✯✰✱✲✳✴✵✶✷✸✹✺✻✼✽✾✿❀❁❂❃❄❅❆❇❈❉❊❋❌❍❎❏❐
+                            -- TODO: vary symbol by dist
+                            name = "○", -- •○◦⦾⦿¤·■⌂☼▼◘◙⁃      ⌖𖥠𐀏⊹₊𖣓𖣨⊹𖣠☩     ✦✧✩✪✫✬✭✮✯✰✱✲✳✴✵✶✷✸✹✺✻✼✽✾✿❀❁❂❃❄❅❆❇❈❉❊❋❌❍❎❏❐
                             world_pos = pos,
                             text = "",
                             number = 0xdc143c,
@@ -129,6 +171,8 @@ local function update()
             -- end
             if meta_nodes then
                 for k, node_pos in pairs(meta_nodes) do
+--                local meta_node_def = core.get_node_or_nil(node_pos)
+--                   if meta_node_def andt
                     local node_meta = core.get_meta(node_pos)
                     if node_meta then
                         local nm = node_meta:to_table()

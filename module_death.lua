@@ -34,6 +34,21 @@ local function onInit()
             end
         end
     end)
+    
+    core.register_chatcommand("ofs", {
+        params = "<seconds>",
+        description = "Override formspec. Show an empty formpec after a given number or 10 seconds to override the death message.",
+        func = function(param)
+            local delay = param and tonumber(param)
+            if delay == nil then
+                delay = 10
+            end
+            core.after(delay, function()
+                core.show_formspec("", "")
+            end)
+        end,
+    })
+
 end
 
 

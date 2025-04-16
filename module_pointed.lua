@@ -32,6 +32,36 @@ local empty_fields_table_dump = dump({ fields = {} })
 local empty_fields_table_ser = SER({ fields = {} })
 
 
+local function onInit()
+    if tmi.player and tmi.player.set_yaw then
+        tmi.can_set_look = true
+        core.register_chatcommand("aim", {
+            params = "<name> | (<x> <y> <z>) | (<x> <z>)",
+            description = "aim at player or point",
+            func = function(params)
+                if params then
+                    local param_table = params.split("[, ]-")
+                    if #param_table == 1 then
+                        if table.index_of(tmi.players, param_table[1]) then
+
+                        else
+                            local x = tonumber(param_table[1])
+                            local y = tonumber(param_table[2])
+                            local z = tonumber(param_table[3])
+                            if #param_table == 2 then
+                                if x ~= nil and y ~= nil then
+                                    tmi.player()=
+                                end
+
+                            end
+                        end
+                    end
+                end
+            end
+        })
+    end
+end
+
 
 local function update(index)
     if not camera then
@@ -120,6 +150,7 @@ tmi.addModule({
     id = 'pointed',
     title = 'pointed',
     value = 'pointed module',
+    onInit = onInit,
     onUpdate = update,
 })
 

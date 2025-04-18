@@ -42,7 +42,7 @@ local function onInit()
                 if params then
                     local param_table = params.split("[, ]-")
                     if #param_table == 1 then
-                        if table.index_of(tmi.players, param_table[1]) then
+                        if table.indexof(tmi.players, param_table[1]) then
 
                         else
                             local x = tonumber(param_table[1])
@@ -50,7 +50,7 @@ local function onInit()
                             local z = tonumber(param_table[3])
                             if #param_table == 2 then
                                 if x ~= nil and y ~= nil then
-                                    tmi.player()=
+                                    -- tmi.player()
                                 end
 
                             end
